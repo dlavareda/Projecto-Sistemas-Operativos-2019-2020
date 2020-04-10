@@ -9,6 +9,5 @@ int main(int argc, char const *argv[])
     Processo *arr_processos;     //array de estruturas
     arr_processos = carregarDados();
     mostrarArray(arr_processos);
-    
     return 0;
 }
