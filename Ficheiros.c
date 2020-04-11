@@ -30,7 +30,7 @@ Processo *carregarDados()
     }
     else
     {
-        printf("FICHEIRO ABERTO COM SUCESSO!\n\n");
+        //printf("FICHEIRO ABERTO COM SUCESSO!\n\n");
     }
 
     char linha[10], *token;

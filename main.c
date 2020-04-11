@@ -7,8 +7,22 @@
 Processo *carregarDados();
 int main(int argc, char const *argv[])
 {
-    Processo *arr_processos;     //array de estruturas
+    Processo *arr_processos; //array de estruturas
     arr_processos = carregarDados();
     mostrarArray(arr_processos);
-    return 0;
+    //test_print();
+    //return 0;
+
+    int resposta = 0;
+    while (resposta != 9)
+    {
+        printf("Escolha o algoritmo de escalonamento?\n");
+        printf("1 - FCFS\n");
+        printf("9 - Sair\n");
+        scanf("%d", &resposta);
+        if(resposta == 1){
+            FCFS(arr_processos);
+            printf("\n");
+        }
+    }
 }
