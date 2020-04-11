@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define N_ELEMENTOS_FICHEIRO 10
 #include "Ficheiros.c"
 #include "escalonadores.c"
 
