@@ -30,7 +30,7 @@ Processo *carregarDados()
     }
     else
     {
-        //printf("FICHEIRO ABERTO COM SUCESSO!\n\n");
+        printf("FICHEIRO ABERTO COM SUCESSO!\n\n");
     }
 
     char linha[10], *token;
@@ -68,14 +68,6 @@ Processo *carregarDados()
         }
         i++;
     }
-
-    /*for (int e = 0; e < 10; e++) // impressão do array de estruturas
-    {
-        printf("%s %d %d\n", arr_processos[e].nome_processo,
-               arr_processos[e].tempo_chegada,
-               arr_processos[e].tempo_burst);
-    }*/
-
     fclose(file);
     return arr_processos;
 }

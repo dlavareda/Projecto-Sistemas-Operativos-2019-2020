@@ -21,13 +21,15 @@ int main(int argc, char const *argv[])
         printf("2 - Shortest-Job-First (Não Preemptivo)\n");
         printf("9 - Sair\n");
         scanf("%d", &resposta);
-        if(resposta == 1){
+        if (resposta == 1)
+        {
             FCFS(arr_processos);
             printf("\n");
-        }else if(resposta == 2){
+        }
+        else if (resposta == 2)
+        {
             SJF(arr_processos);
             printf("\n");
         }
-        
     }
 }
