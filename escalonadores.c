@@ -16,7 +16,7 @@ void FCFS(Processo *arr_processos) //First Come First Served
 {
     printf("Linha de execussão dos processos usando o algoritmo de escalonamento FCFS\n");
     int actual = 0;
-    for (int z = 0; z < ultimoProcesso(arr_processos); z++)
+    for (int z = 0; z <= ultimoProcesso(arr_processos); z++)
     {
         for (int i = 0; i < 10; i++) //percorre o array todo
         {
