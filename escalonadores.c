@@ -70,7 +70,7 @@ void SJF(Processo *arr_processos) //Shortest-Job-First Não Preemptivo
 
     printf("Linha de execussão dos processos usando o algoritmo de escalonamento Shortest-Job-First (Não Preemptivo)\n");
     int actual = 0;
-    for (int z = 0; z < ultimoProcesso(arr_processos); z++) //Percorrer todos os segundos até ao segundo do ultimo processo a chegar
+    for (int z = 0; z <= ultimoProcesso(arr_processos); z++) //Percorrer todos os segundos até ao segundo do ultimo processo a chegar
     {
         Processo *arr_tmp = malloc(0);
         int tamanho_arr_tmp = 0;
