@@ -14,7 +14,7 @@
 #define MagentaClaro "\x1b[95m"
 #define CianoClaro "\x1b[96m"
 
-const char *obterCor(char *Processo)
+char *obterCor(char *Processo)
 {
     if (strcmp(Processo, "P1") == 0)
     {

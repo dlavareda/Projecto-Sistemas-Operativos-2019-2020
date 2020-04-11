@@ -1,4 +1,4 @@
-#include "teste_loadbar.c"
+#include "linhaDeExecussao.c"
 int ultimoProcesso(Processo *arr_processos) //Encontra a hora do ultimo processo a chegar
 {
     int ultimo = 0;
@@ -14,6 +14,7 @@ int ultimoProcesso(Processo *arr_processos) //Encontra a hora do ultimo processo
 
 void FCFS(Processo *arr_processos) //First Come First Served
 {
+    printf("Linha de execussão dos processos usando o algoritmo de escalonamento FCFS\n");
     int actual = 0;
     for (int z = 0; z < ultimoProcesso(arr_processos); z++)
     {
@@ -30,8 +31,24 @@ void FCFS(Processo *arr_processos) //First Come First Served
         }
         actual++;
     }
+    printf("%s[Fim da Execussão]", Normal);
 }
-
+void SJF(Processo *arr_processos) //Shortest-Job-First Não Preemptivo
+{
+    printf("Linha de execussão dos processos usando o algoritmo de escalonamento Shortest-Job-First (Não Preemptivo)\n");
+    int actual = 0;
+    for (int z = 0; z < ultimoProcesso(arr_processos); z++)
+    {
+        for (int i = 0; i < 10; i++) //percorre o array todo
+        {
+            if (arr_processos[i].tempo_chegada == actual)
+            {
+                
+            }
+        }
+    }
+}
+    /*
 void test_print()
 {
     barraProgressoAdicionarElemento("P1", Vermelho);
@@ -48,9 +65,9 @@ void test_print()
     printf("%s->", Normal);
     barraProgressoAdicionarElemento("P3", Amarelo);
     printf("%s\n", Normal); //Faz reset a cor
-}
+}*/
 
-/*int main()
+    /*int main()
 {
     barraProgressoAdicionarElemento("P1", Vermelho);
     barraProgressoAdicionarElemento("P1", Vermelho);

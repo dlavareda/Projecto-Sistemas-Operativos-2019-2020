@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
 {
     Processo *arr_processos; //array de estruturas
     arr_processos = carregarDados();
-    mostrarArray(arr_processos);
+    //mostrarArray(arr_processos);
     //test_print();
     //return 0;
 
@@ -18,11 +18,16 @@ int main(int argc, char const *argv[])
     {
         printf("Escolha o algoritmo de escalonamento?\n");
         printf("1 - FCFS\n");
+        printf("2 - Shortest-Job-First (Não Preemptivo)\n");
         printf("9 - Sair\n");
         scanf("%d", &resposta);
         if(resposta == 1){
             FCFS(arr_processos);
             printf("\n");
+        }else if(resposta == 2){
+            SJF(arr_processos);
+            printf("\n");
         }
+        
     }
 }
