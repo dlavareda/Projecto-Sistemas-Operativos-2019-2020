@@ -2,19 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #define N_ELEMENTOS_FICHEIRO 10
-#include "Ficheiros.c"
+#include "LerFicheiros.c"
 #include "escalonadores.c"
 
 Processo *carregarDados();
 int main(int argc, char const *argv[])
 {
-    Processo *arr_processos; //array de estruturas
-    arr_processos = carregarDados();
-    //mostrarArray(arr_processos);
-    //test_print();
-    //return 0;
-
-    int resposta = 0;
+    int numProcessoLidos = 0, resposta = 0;;
+    Processo *arr_processos = carregarDados(&numProcessoLidos); //array de estruturas
+ 
     while (resposta != 9)
     {
         printf("Escolha o algoritmo de escalonamento?\n");
@@ -25,11 +21,13 @@ int main(int argc, char const *argv[])
         if (resposta == 1)
         {
             FCFS(arr_processos);
+            printf("\nForam escalonados %d processos", numProcessoLidos);
             printf("\n");
         }
         else if (resposta == 2)
         {
             SJF(arr_processos);
+            printf("\nForam escalonados %d processos", numProcessoLidos);
             printf("\n");
         }
     }
