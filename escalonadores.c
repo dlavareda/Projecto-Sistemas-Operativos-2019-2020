@@ -1,4 +1,7 @@
-#include "linhaDeExecussao.c"
+#include "processManager.h"
+//Antigas dependencias para descomentar para o debuger do VSCODE
+
+//#include "linhaDeExecussao.c"
 int ultimoProcesso(Processo *arr_processos) //Encontra a hora do ultimo processo a chegar
 {
     int ultimo = 0;

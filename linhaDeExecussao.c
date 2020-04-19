@@ -1,18 +1,5 @@
-//definição da palete de cores
-#define Normal "\x1B[0m"
-#define Vermelho "\x1B[31m"
-#define Verde "\x1B[32m"
-#define Amarelo "\x1B[33m"
-#define Azul "\x1B[34m"
-#define Magenta "\x1B[35m"
-#define Ciano "\x1B[36m"
-#define CinzaClaro "\x1b[90m"
-#define VermelhoClaro "\x1b[91m"
-#define VerdeClaro "\x1b[92m"
-#define AmareloClaro "\x1b[93m"
-#define AzulClaro "\x1b[94m"
-#define MagentaClaro "\x1b[95m"
-#define CianoClaro "\x1b[96m"
+#include "processManager.h"
+
 
 char *obterCor(char *Processo)
 {

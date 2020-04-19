@@ -1,3 +1,10 @@
 .vscode
 main
 oldfiles/
+Codigo encontrado Util/
+SimulatorResults.log
+processManager
+main.o
+linhaDeExecussao.o
+LerFicheiros.o
+escalonadores.o

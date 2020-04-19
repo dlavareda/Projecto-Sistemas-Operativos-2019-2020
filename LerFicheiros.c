@@ -1,12 +1,8 @@
-#include <stdio.h>
+#include "processManager.h"
+
+/*#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-typedef struct Processo
-{
-    char nome_processo[10];
-    int tempo_chegada;
-    int tempo_burst;
-} Processo;
+#include <string.h>*/
 
 Processo *carregarDados(int *numProcessosLidos)
 {
@@ -14,15 +10,7 @@ Processo *carregarDados(int *numProcessosLidos)
     char linha[10], *token;
     int i = 0, numero_processos = 0;
 
-    //criação da estrutura
-    typedef struct Processo
-    {
-        char nome_processo[10];
-        int tempo_chegada;
-        int tempo_burst;
-    } Processo;
-
-    file = fopen("tabela.txt", "r"); //operações do ficheiro
+    file = fopen("plan.txt", "r"); //operações do ficheiro
 
     if (file == NULL)
     {
@@ -80,17 +68,22 @@ Processo *carregarDados(int *numProcessosLidos)
                 indice = 0;
             }
         }
+        //Adição do resto dos dados
+        arr_processos[i].pid = 1;
+        arr_processos[i].prioridade = 0;
+        arr_processos[i].PC = 0;
+        arr_processos[i].estado = 1;
         i++;
     }
 
- /*   for (int e = 0; e < i; e++) // impressão do array de estruturas
+    /*   for (int e = 0; e < i; e++) // impressão do array de estruturas
     {
         printf("%s %d %d\n", arr_processos[e].nome_processo,
                arr_processos[e].tempo_chegada,
                arr_processos[e].tempo_burst);
     }*/
 
-   // printf("\nLeu %d processos.\n", numero_processos);
+    // printf("\nLeu %d processos.\n", numero_processos);
     fclose(file);
     *numProcessosLidos = numero_processos;
     return arr_processos;
