@@ -27,6 +27,8 @@ void FCFS(PCB *arr_processos) //First Come First Served
             {
                 for (int j = 0; j < arr_processos[i].tempo_burst; j++)
                 {
+                    arr_processos[i].tempo_cpu++;
+
                     barraProgressoAdicionarElemento(arr_processos[i].nome_processo, obterCor(arr_processos[i].nome_processo));
                 }
                 printf("%s->", Normal);
@@ -96,6 +98,7 @@ void SJF(PCB *arr_processos) //Shortest-Job-First Não Preemptivo
         {
             for (int i = 0; i < arr_tmp[w].tempo_burst; i++)
             {
+                arr_processos[i].tempo_cpu++;
                 barraProgressoAdicionarElemento(arr_tmp[w].nome_processo, obterCor(arr_tmp[w].nome_processo));
             }
             printf("%s->", Normal);

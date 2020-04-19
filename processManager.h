@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #define N_ELEMENTOS_FICHEIRO 10
 //definição da palete de cores
 #define Normal "\x1B[0m"
@@ -27,9 +26,11 @@ typedef struct PCB
     int tempo_chegada;
     int tempo_burst;
     int pid;
+    int ppid;
     int prioridade;
     int PC;
     int estado;
+    int tempo_cpu;
 } PCB;
 
 //Definição das listas
@@ -50,3 +51,29 @@ void SJF(PCB *);
 //linhaDeExecussao
 char *obterCor(char *);
 void barraProgressoAdicionarElemento(char *, char *);
+
+//Manipulação de listas
+/*
+Parece-me que basta uma função inserir, remover e limpar dado que as listas têm a mesma estrutura.
+Mas caso nao dê ja tens aqui os 9 prototipos.
+*/
+
+/*
+Basicamente inserir o elemento na lista e retornar a cabeça da lista
+*/
+PCB *inserirProntos(PCB *lista, PCB *elemento);
+PCB *inserirTerminados(PCB *lista, PCB *elemento);
+PCB *inserirBloqueados(PCB *lista, PCB *elemento);
+
+/*
+Basicamente remover o elemento na lista e retornar a cabeça da lista
+*/
+PCB *removerProntos(PCB *lista, PCB *elemento);
+PCB *removerTerminados(PCB *lista, PCB *elemento);
+PCB *removerBloqueados(PCB *lista, PCB *elemento);
+/*
+limpar todos os elementos da lista
+*/
+PCB *limparProntos(PCB *lista, PCB *elemento);
+PCB *limparTerminados(PCB *lista, PCB *elemento);
+PCB *limparBloqueados(PCB *lista, PCB *elemento);

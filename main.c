@@ -12,7 +12,9 @@ int main(int argc, char const *argv[])
 {
     int numProcessoLidos = 0, resposta = 0;
     PCB *Pronto = carregarDados(&numProcessoLidos); //array de estruturas
-
+    PCB *Terminado;
+    PCB *Bloqueado;
+    
     while (resposta != 9)
     {
         printf("Escolha o algoritmo de escalonamento?\n");
@@ -25,8 +27,8 @@ int main(int argc, char const *argv[])
         {
             for (int i = 0; i < numProcessoLidos; i++)
             {
-                printf("nome_processo %s - tempo_chegada %d - tempo_burst %d - pid %d - prioridade %d - PC %d - estado %d\n", Pronto[i].nome_processo, 
-                Pronto[i].tempo_chegada, Pronto[i].tempo_burst, Pronto[i].pid, Pronto[i].prioridade, Pronto[i].PC,Pronto[i].estado);
+                printf("nome_processo %s - tempo_chegada %d - tempo_burst %d - pid %d - prioridade %d - PC %d - estado %d - ppid %d - tempo_cpu %d\n", Pronto[i].nome_processo, 
+                Pronto[i].tempo_chegada, Pronto[i].tempo_burst, Pronto[i].pid, Pronto[i].prioridade, Pronto[i].PC,Pronto[i].estado, Pronto[i].ppid, Pronto[i].tempo_cpu);
             }
 
             printf("\n");

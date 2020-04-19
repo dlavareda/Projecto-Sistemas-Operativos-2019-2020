@@ -69,10 +69,12 @@ PCB *carregarDados(int *numProcessosLidos)
             }
         }
         //Adição do resto dos dados
-        arr_processos[i].pid = 1;
+        arr_processos[i].pid = i + 1;
+        arr_processos[i].ppid = 0;
         arr_processos[i].prioridade = 0;
         arr_processos[i].PC = 0;
         arr_processos[i].estado = 1;
+        arr_processos[i].tempo_cpu = 0;
         i++;
     }
 
