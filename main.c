@@ -7,11 +7,11 @@
 #include "LerFicheiros.c"
 #include "escalonadores.c"*/
 
-Processo *carregarDados();
+PCB *carregarDados();
 int main(int argc, char const *argv[])
 {
     int numProcessoLidos = 0, resposta = 0;
-    Processo *Pronto = carregarDados(&numProcessoLidos); //array de estruturas
+    PCB *Pronto = carregarDados(&numProcessoLidos); //array de estruturas
 
     while (resposta != 9)
     {

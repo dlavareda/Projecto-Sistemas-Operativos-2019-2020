@@ -2,7 +2,7 @@
 //Antigas dependencias para descomentar para o debuger do VSCODE
 
 //#include "linhaDeExecussao.c"
-int ultimoProcesso(Processo *arr_processos) //Encontra a hora do ultimo processo a chegar
+int ultimoProcesso(PCB *arr_processos) //Encontra a hora do ultimo processo a chegar
 {
     int ultimo = 0;
     for (int i = 0; i < 10; i++)
@@ -15,7 +15,7 @@ int ultimoProcesso(Processo *arr_processos) //Encontra a hora do ultimo processo
     return ultimo;
 }
 
-void FCFS(Processo *arr_processos) //First Come First Served
+void FCFS(PCB *arr_processos) //First Come First Served
 {
     printf("Linha de execussão dos processos usando o algoritmo de escalonamento FCFS\n");
     int actual = 0;
@@ -37,9 +37,9 @@ void FCFS(Processo *arr_processos) //First Come First Served
     printf("%s[Fim da Execussão]", Normal);
 }
 
-void swap(Processo *xp, Processo *yp)
+void swap(PCB *xp, PCB *yp)
 {
-    Processo *aux;
+    PCB *aux;
     strcpy(aux->nome_processo, xp->nome_processo);
     aux->tempo_burst = xp->tempo_burst;
     aux->tempo_chegada = xp->tempo_chegada;
@@ -51,7 +51,7 @@ void swap(Processo *xp, Processo *yp)
     yp->tempo_chegada = aux->tempo_chegada;
 }
 
-void bubbleSort(Processo *arr, int n)
+void bubbleSort(PCB *arr, int n)
 {
     int i, j;
     for (i = 0; i < n - 1; i++)
@@ -68,14 +68,14 @@ void bubbleSort(Processo *arr, int n)
     return;
 }
 
-void SJF(Processo *arr_processos) //Shortest-Job-First Não Preemptivo
+void SJF(PCB *arr_processos) //Shortest-Job-First Não Preemptivo
 {
 
     printf("Linha de execussão dos processos usando o algoritmo de escalonamento Shortest-Job-First (Não Preemptivo)\n");
     int actual = 0;
     for (int z = 0; z <= ultimoProcesso(arr_processos); z++) //Percorrer todos os segundos até ao segundo do ultimo processo a chegar
     {
-        Processo *arr_tmp = malloc(0);
+        PCB *arr_tmp = malloc(0);
         int tamanho_arr_tmp = 0;
         for (int i = 0; i < 10; i++) //percorrer toda a lista de processos
         {

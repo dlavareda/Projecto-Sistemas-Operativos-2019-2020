@@ -21,7 +21,7 @@
 #define CianoClaro "\x1b[96m"
 
 //Definição de estruturas
-typedef struct Processo
+typedef struct PCB
 {
     char nome_processo[10];
     int tempo_chegada;
@@ -30,7 +30,7 @@ typedef struct Processo
     int prioridade;
     int PC;
     int estado;
-} Processo;
+} PCB;
 
 //Definição das listas
 /*typedef struct Processo* Pronto;
@@ -38,14 +38,14 @@ typedef struct Processo* Bloqueado;
 typedef struct Processo* Terminado;*/
 
 //LerFicheiros
-Processo *carregarDados(int *);
+PCB *carregarDados(int *);
 
 //Escalonadores
-int ultimoProcesso(Processo *);
-void FCFS(Processo *);
-void swap(Processo *, Processo *);
-void bubbleSort(Processo *, int);
-void SJF(Processo *);
+int ultimoProcesso(PCB *);
+void FCFS(PCB *);
+void swap(PCB *, PCB *);
+void bubbleSort(PCB *, int);
+void SJF(PCB *);
 
 //linhaDeExecussao
 char *obterCor(char *);

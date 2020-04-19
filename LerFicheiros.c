@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>*/
 
-Processo *carregarDados(int *numProcessosLidos)
+PCB *carregarDados(int *numProcessosLidos)
 {
     FILE *file, *file2;
     char linha[10], *token;
@@ -29,7 +29,7 @@ Processo *carregarDados(int *numProcessosLidos)
     }
 
     rewind(file);                                                          //ponteiro volta para o início do ficheiro
-    Processo *arr_processos = malloc(sizeof(Processo) * numero_processos); //array de estruturas
+    PCB *arr_processos = malloc(sizeof(PCB) * numero_processos); //array de estruturas
 
     for (int i = 0; i < numero_processos; i++) //inicialização a default
     {
