@@ -1,0 +1,3 @@
+progenitor.prg 0
+progenitor.prg 20
+filho1.prg 30

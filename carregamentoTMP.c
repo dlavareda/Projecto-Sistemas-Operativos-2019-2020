@@ -1,44 +1,55 @@
-//carregamento de dados manual até a função ler dos ficheiros estar pronta
-    //Processos
-    Processo *p = malloc(11 * sizeof(Processo));
-    strcpy(p[0].instrucao, "M");
-    p[0].valor = 100;
-    strcpy(p[1].instrucao, "A");
-    p[1].valor = 19;
-    strcpy(p[2].instrucao, "A");
-    p[2].valor = 20;
-    strcpy(p[3].instrucao, "S");
-    p[3].valor = 12;
-    strcpy(p[4].instrucao, "A");
-    p[4].valor = 1;
-    strcpy(p[5].instrucao, "A");
-    p[5].valor = 4;
-    strcpy(p[6].instrucao, "C");
-    p[6].valor = 2;
-    strcpy(p[7].instrucao, "L");
-    strcpy(p[7].filho, "filho1");
-    strcpy(p[8].instrucao, "C");
-    p[8].valor = 2;
-    strcpy(p[9].instrucao, "L");
-    strcpy(p[9].filho, "filho2");
-    strcpy(p[10].instrucao, "T");
+void carregarDados(Memory *m, int *RAM_size)
+{
+    strcpy(m[0].instrucao, "M");
+    m[0].valor = 100;
+    strcpy(m[0].nome, "NULL");
+    strcpy(m[1].instrucao, "A");
+    m[1].valor = 19;
+    strcpy(m[1].nome, "NULL");
+    strcpy(m[2].instrucao, "A");
+    m[2].valor = 20;
+    strcpy(m[2].nome, "NULL");
+    strcpy(m[3].instrucao, "S");
+    m[3].valor = 12;
+    strcpy(m[3].nome, "NULL");
+    strcpy(m[4].instrucao, "A");
+    m[4].valor = 1;
+    strcpy(m[4].nome, "NULL");
+    strcpy(m[5].instrucao, "A");
+    m[5].valor = 4;
+    strcpy(m[5].nome, "NULL");
+    strcpy(m[6].instrucao, "C");
+    m[6].valor = 2;
+    strcpy(m[6].nome, "NULL");
+    strcpy(m[7].instrucao, "L");
+    strcpy(m[7].nome, "filho1");
+    strcpy(m[8].instrucao, "C");
+    m[8].valor = 2;
+    strcpy(m[8].nome, "NULL");
+    strcpy(m[9].instrucao, "L");
+    strcpy(m[9].nome, "filho2");
+    strcpy(m[10].instrucao, "T");
+    strcpy(m[10].nome, "NULL");
 
-    Processo *p2 = malloc(3 * sizeof(Processo));
-    strcpy(p2[0].instrucao, "M");
-    p2[0].valor = 200;
-    strcpy(p2[1].instrucao, "A");
-    p2[1].valor = 19;
-    strcpy(p2[2].instrucao, "T");
+    strcpy(m[11].instrucao, "M");
+    m[11].valor = 200;
+    strcpy(m[11].nome, "NULL");
+    strcpy(m[12].instrucao, "A");
+    m[12].valor = 19;
+    strcpy(m[12].nome, "NULL");
+    strcpy(m[13].instrucao, "T");
+    strcpy(m[13].nome, "NULL");
 
-    Processo *p3 = malloc(4 * sizeof(Processo));
-    strcpy(p3[0].instrucao, "M");
-    p3[0].valor = 300;
-    strcpy(p3[1].instrucao, "S");
-    p3[1].valor = 12;
-    strcpy(p3[2].instrucao, "A");
-    p3[2].valor = 5;
-    strcpy(p3[3].instrucao, "T");
-
-    //plan
-
-    
+    strcpy(m[14].instrucao, "M");
+    m[14].valor = 300;
+    strcpy(m[14].nome, "NULL");
+    strcpy(m[15].instrucao, "S");
+    m[15].valor = 12;
+    strcpy(m[15].nome, "NULL");
+    strcpy(m[16].instrucao, "A");
+    m[15].valor = 5;
+    strcpy(m[16].nome, "NULL");
+    strcpy(m[17].instrucao, "T");
+    strcpy(m[17].nome, "NULL");
+    *RAM_size = 18;
+}
