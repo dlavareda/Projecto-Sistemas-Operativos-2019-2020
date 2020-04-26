@@ -29,12 +29,13 @@ typedef struct plan
 } plan;
 #include "carregamentoTMP.c"
 #include "ficheiros.c"
-
+#include "operacoes.c"
 //Função temporaria para preencher com dados dummy
 void carregarDados(Memory *, int *);
 
 //Função que lista os processos existentes no PCB
-void mostrarPCB(PCB *ProcessCB, int PCB_size){
+void mostrarPCB(PCB *ProcessCB, int PCB_size)
+{
     for (int i = 0; i < PCB_size; i++)
     {
         printf("\n\nProcesso %d\n", i);
@@ -45,27 +46,34 @@ void mostrarPCB(PCB *ProcessCB, int PCB_size){
         printf("PID %d\n", ProcessCB[i].PID);
         printf("PPID %d\n", ProcessCB[i].PPID);
         printf("Prioridade %d\n", ProcessCB[i].prioridade);
-        printf("Estado %d\n",ProcessCB[i].estado);
+        printf("Estado %d\n", ProcessCB[i].estado);
     }
 }
+
+
 
 int main()
 {
     //Definição da memoria até 1000 instruções
     int RAM_size = 0; //variavel com o numero de slots de memoria ocupados
     Memory *RAM = malloc(1000 * sizeof(Memory));
+    //Definição da estrutura Plano
+    plan *plano = malloc(20 * sizeof(plan));
+    int plano_size = 0; //variavel com o numero de programas recebidos no plan.txt
+    //Definição da estrutura PCB
+    PCB *ProcessCB = malloc(0);
+    int PCB_size = 0;
+
+    //usa a função temporaria de carregamento dos programas para RAM
     carregarDados(RAM, &RAM_size);
 
     //teste para ver se a array RAM esta a ser bem construido
-
     for (int i = 0; i < RAM_size; i++)
     {
         printf("%s - %d - %s\n", RAM[i].instrucao, RAM[i].valor, RAM[i].nome);
     }
 
-    // Carregamento do plan.txt
-    plan *plano = malloc(20 * sizeof(plan));
-    int plano_size = 0; //variavel com o numero de programas recebidos no plan.txt
+    //Faz a leitura do ficheiro plan.txt e adiciona a estrutura
     plano_size = lerPlan(plano);
 
     //teste para ver se a array PLAN esta a ser bem construido
@@ -73,8 +81,7 @@ int main()
     {
         printf("%s - %d\n", plano[i].programa, plano[i].tempo_chegada);
     }
-    PCB *ProcessCB = malloc(0);
-    int PCB_size = 0;
+
     //inicialização do PCB
     for (int i = 0; i < plano_size; i++)
     {
@@ -91,5 +98,13 @@ int main()
     PCB_size = plano_size;
     mostrarPCB(ProcessCB, PCB_size);
 
+    //Teste operações
+    M(ProcessCB, PCB_size, 1, 150);
+    mostrarPCB(ProcessCB, PCB_size);
+    A(ProcessCB, PCB_size, 1, 150);
+    mostrarPCB(ProcessCB, PCB_size);
+    S(ProcessCB, PCB_size, 1, 10);
+    mostrarPCB(ProcessCB, PCB_size);
+    //Fim teste operações
     return;
 }
