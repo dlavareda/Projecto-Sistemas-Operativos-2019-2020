@@ -49,9 +49,22 @@ void mostrarPCB(PCB *ProcessCB, int PCB_size)
         printf("Estado %d\n", ProcessCB[i].estado);
     }
 }
-
-
-
+void inicializarPCB(PCB *ProcessCB, int *PCB_size, plan *plano, int plano_size)
+{
+    //inicialização do PCB
+    for (int i = 0; i < plano_size; i++)
+    {
+        strcpy(ProcessCB[i].nome_processo, plano[i].programa);
+        ProcessCB[i].start = 0;
+        ProcessCB[i].variavel = 0;
+        ProcessCB[i].PC = 0;
+        ProcessCB[i].PID = i + 1;
+        ProcessCB[i].PPID = 0;
+        ProcessCB[i].prioridade = 0;
+        ProcessCB[i].estado = 1;
+    }
+    *PCB_size = plano_size;
+}
 int main()
 {
     //Definição da memoria até 1000 instruções
@@ -61,7 +74,7 @@ int main()
     plan *plano = malloc(20 * sizeof(plan));
     int plano_size = 0; //variavel com o numero de programas recebidos no plan.txt
     //Definição da estrutura PCB
-    PCB *ProcessCB = malloc(0);
+    PCB *ProcessCB = malloc(100 * sizeof(PCB));
     int PCB_size = 0;
 
     //usa a função temporaria de carregamento dos programas para RAM
@@ -82,20 +95,10 @@ int main()
         printf("%s - %d\n", plano[i].programa, plano[i].tempo_chegada);
     }
 
-    //inicialização do PCB
-    for (int i = 0; i < plano_size; i++)
-    {
-        ProcessCB = realloc(ProcessCB, (i + 1) * sizeof(PCB));
-        strcpy(ProcessCB[i].nome_processo, plano[i].programa);
-        ProcessCB[i].start = 0;
-        ProcessCB[i].variavel = 0;
-        ProcessCB[i].PC = 0;
-        ProcessCB[i].PID = i + 1;
-        ProcessCB[i].PPID = 0;
-        ProcessCB[i].prioridade = 0;
-        ProcessCB[i].estado = 1;
-    }
-    PCB_size = plano_size;
+    //inicializar PCB
+    inicializarPCB(ProcessCB, &PCB_size, plano, plano_size);
+    
+    //mostrar PCB
     mostrarPCB(ProcessCB, PCB_size);
 
     //Teste operações
