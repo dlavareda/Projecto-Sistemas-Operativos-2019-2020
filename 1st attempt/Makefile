@@ -10,15 +10,19 @@
 CC=cc
 FLAGS=-c -Wall
 LIBS=-lm
-OBS=main.o LerFicheiros.o
+OBS=main.o escalonadores.o LerFicheiros.o linhaDeExecussao.o
 
 #Alvo por defeito é o primeiro
 all :  processManager
 
 main.o : processManager.h main.c
 	$(CC) $(FLAGS) main.c
-LerFicheiros.o : processManager.h LerFicheiros.c
+execute.o : processManager.h escalonadores.c
+	$(CC) $(FLAGS) escalonadores.c
+parse.o : processManager.h LerFicheiros.c
 	$(CC) $(FLAGS) LerFicheiros.c
+socp.o : processManager.h linhaDeExecussao.c
+	$(CC) $(FLAGS) linhaDeExecussao.c
 processManager : $(OBS)
 	$(CC)  -o processManager  $(OBS) $(LIBS)
 clean limpar:
