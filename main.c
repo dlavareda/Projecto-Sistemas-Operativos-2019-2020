@@ -63,6 +63,7 @@ void mostrarPCB(PCB *ProcessCB, int PCB_size)
     }
 }
 
+//mostra o conteudo da RAM
 void mostrarRAM(Memory *RAM, int RAM_size)
 {
     for (int i = 0; i < RAM_size; i++)
@@ -111,6 +112,7 @@ int main()
     int PCB_size = 0;
 
     ///////////////////////////////////////////////     Leitura do Plano    ///////////////////////////////////////////////
+    
     //Faz a leitura do ficheiro plan.txt e adiciona a estrutura
     plano_size = lerPlan(plano);
 
