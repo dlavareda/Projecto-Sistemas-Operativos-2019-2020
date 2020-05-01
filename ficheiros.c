@@ -1,17 +1,17 @@
-Memory *lerProcesso(char *nomePrograma)
+Memory *lerProcesso(char *nomePrograma, int *programaSize)
 {
     //criação da estrutura auxiliar
     typedef struct ProcessoAux
     {
         char campo1[1];
-        char campo2[20];
+        char campo2[15];
     } ProcessoAux;
 
     FILE *f;
     f = fopen(nomePrograma, "r");
     int i = 0;
     char campo1[1];
-    char campo2[20];
+    char campo2[15];
     ProcessoAux *aux = calloc(aux, 0);
     while (fscanf(f, "%s %s", campo1, campo2) >= 1)
     {
@@ -28,6 +28,7 @@ Memory *lerProcesso(char *nomePrograma)
         {
             strcpy(Processo[i].instrucao, aux[i].campo1);
             Processo[i].valor = atoi(aux[i].campo2);
+            strcpy(Processo[i].nome, "NULL");
         }
         else if ((aux[i].campo1[0] == 76))
         {
@@ -38,8 +39,12 @@ Memory *lerProcesso(char *nomePrograma)
         else if ((aux[i].campo1[0] == 84))
         {
             strcpy(Processo[i].instrucao, aux[i].campo1);
+            Processo[i].valor = 0;
+            strcpy(Processo[i].nome, "NULL");
         }
     }
+    free(aux);
+    *programaSize = i;
     fclose(f);
     return Processo;
 }

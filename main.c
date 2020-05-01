@@ -27,11 +27,23 @@ typedef struct plan
     char programa[15];
     int tempo_chegada;
 } plan;
-#include "carregamentoTMP.c"
 #include "ficheiros.c"
 #include "operacoes.c"
-//Função temporaria para preencher com dados dummy
-void carregarDados(Memory *, int *);
+//Função para ler novo processo
+Memory *lerProcesso(char *, int *);
+//Função para carregar o novo programa aos proximos lugares na memoria
+void adicionarProgramaRAM(Memory *RAM, int *RAM_size, Memory *novoPrograma, int novoPrograma_size)
+{
+
+    for (int i = 0; i < novoPrograma_size; i++)
+    {
+
+        strcpy(RAM[*RAM_size].instrucao, novoPrograma[i].instrucao);
+        RAM[*RAM_size].valor = novoPrograma[i].valor;
+        strcpy(RAM[*RAM_size].nome, novoPrograma[i].nome);
+        (*RAM_size)++;
+    }
+}
 
 //Função que lista os processos existentes no PCB
 void mostrarPCB(PCB *ProcessCB, int PCB_size)
@@ -49,27 +61,46 @@ void mostrarPCB(PCB *ProcessCB, int PCB_size)
         printf("Estado %d\n", ProcessCB[i].estado);
     }
 }
-void inicializarPCB(PCB *ProcessCB, int *PCB_size, plan *plano, int plano_size)
+
+void mostrarRAM(Memory *RAM, int RAM_size)
 {
-    //inicialização do PCB
-    for (int i = 0; i < plano_size; i++)
+    for (int i = 0; i < RAM_size; i++)
     {
-        strcpy(ProcessCB[i].nome_processo, plano[i].programa);
-        ProcessCB[i].start = 0;
-        ProcessCB[i].variavel = 0;
-        ProcessCB[i].PC = 0;
-        ProcessCB[i].PID = i + 1;
-        ProcessCB[i].PPID = 0;
-        ProcessCB[i].prioridade = 0;
-        ProcessCB[i].estado = 1;
+        printf("Instrução %c - Valor %d - Nome %s\n", RAM[i].instrucao[0], RAM[i].valor, RAM[i].nome);
     }
-    *PCB_size = plano_size;
+}
+
+//cria o processo do escalonador
+void inicializarPCB(PCB *ProcessCB, int *PCB_size)
+{
+    strcpy(ProcessCB[0].nome_processo, "escalonador");
+    ProcessCB[0].start = 0;
+    ProcessCB[0].variavel = 0;
+    ProcessCB[0].PC = 0;
+    ProcessCB[0].PID = 0;
+    ProcessCB[0].PPID = 0;
+    ProcessCB[0].prioridade = 0;
+    ProcessCB[0].estado = 1;
+    *PCB_size = 1;
+}
+void adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria)
+{
+    int i = *PCB_size;
+    strcpy(ProcessCB[i].nome_processo, nome);
+    ProcessCB[i].start = primeiroElementoMemoria;
+    ProcessCB[i].variavel = 0;
+    ProcessCB[i].PC = 0;
+    ProcessCB[i].PID = (ProcessCB[i - 1].PID) + 1;
+    ProcessCB[i].PPID = 0;
+    ProcessCB[i].prioridade = 0;
+    ProcessCB[i].estado = 1;
+    (*PCB_size)++;
 }
 int main()
 {
     //Definição da memoria até 1000 instruções
     int RAM_size = 0; //variavel com o numero de slots de memoria ocupados
-    Memory *RAM = malloc(1000 * sizeof(Memory));
+    Memory *RAM = malloc((1000 * sizeof(Memory)));
     //Definição da estrutura Plano
     plan *plano = malloc(20 * sizeof(plan));
     int plano_size = 0; //variavel com o numero de programas recebidos no plan.txt
@@ -77,37 +108,39 @@ int main()
     PCB *ProcessCB = malloc(100 * sizeof(PCB));
     int PCB_size = 0;
 
-    //usa a função temporaria de carregamento dos programas para RAM
-    carregarDados(RAM, &RAM_size);
-
-    //teste para ver se a array RAM esta a ser bem construido
-    for (int i = 0; i < RAM_size; i++)
-    {
-        printf("%s - %d - %s\n", RAM[i].instrucao, RAM[i].valor, RAM[i].nome);
-    }
-
+    ///////////////////////////////////////////////     Leitura do Plano    ///////////////////////////////////////////////
     //Faz a leitura do ficheiro plan.txt e adiciona a estrutura
     plano_size = lerPlan(plano);
 
     //teste para ver se a array PLAN esta a ser bem construido
-    for (int i = 0; i < plano_size; i++)
+    /*  for (int i = 0; i < plano_size; i++)
     {
         printf("%s - %d\n", plano[i].programa, plano[i].tempo_chegada);
-    }
+    }*/
+    ////////////////////////////////////////     Inicialização do PCB    //////////////////////////////////////////////////
 
     //inicializar PCB
-    inicializarPCB(ProcessCB, &PCB_size, plano, plano_size);
-    
+    inicializarPCB(ProcessCB, &PCB_size);
+
+    ////////////////////////     Carregamento dos Programas do plano para RAM do Plano    //////////////////////////////////
+
+    int novoProgramaSize = 0;
+    int startPrograma = 0;
+    Memory *novoPrograma;
+    for (int i = 0; i < plano_size; i++)
+    {
+        startPrograma = (RAM_size);
+        novoPrograma = lerProcesso(plano[i].programa, &novoProgramaSize);
+        adicionarProgramaRAM(RAM, &RAM_size, novoPrograma, novoProgramaSize);
+        //Adiciona o programa recem carregado ao PCB
+        adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma);
+        free(novoPrograma);
+        novoProgramaSize = 0;
+    }
+    mostrarRAM(RAM, RAM_size);
+
     //mostrar PCB
     mostrarPCB(ProcessCB, PCB_size);
 
-    //Teste operações
-    M(ProcessCB, PCB_size, 1, 150);
-    mostrarPCB(ProcessCB, PCB_size);
-    A(ProcessCB, PCB_size, 1, 150);
-    mostrarPCB(ProcessCB, PCB_size);
-    S(ProcessCB, PCB_size, 1, 10);
-    mostrarPCB(ProcessCB, PCB_size);
-    //Fim teste operações
     return;
 }
