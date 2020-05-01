@@ -29,6 +29,7 @@ typedef struct plan
 } plan;
 #include "ficheiros.c"
 #include "operacoes.c"
+#include "execute.c"
 //Função para ler novo processo
 Memory *lerProcesso(char *, int *);
 //Função para carregar o novo programa aos proximos lugares na memoria
@@ -112,11 +113,6 @@ int main()
     //Faz a leitura do ficheiro plan.txt e adiciona a estrutura
     plano_size = lerPlan(plano);
 
-    //teste para ver se a array PLAN esta a ser bem construido
-    /*  for (int i = 0; i < plano_size; i++)
-    {
-        printf("%s - %d\n", plano[i].programa, plano[i].tempo_chegada);
-    }*/
     ////////////////////////////////////////     Inicialização do PCB    //////////////////////////////////////////////////
 
     //inicializar PCB
@@ -140,6 +136,11 @@ int main()
     mostrarRAM(RAM, RAM_size);
 
     //mostrar PCB
+    mostrarPCB(ProcessCB, PCB_size);
+    ////////////////////////     Executar o programa.txt   //////////////////////////////////
+
+    int PID = 1; //executar programa PID 1
+    executarPrograma(RAM, RAM_size, PID, ProcessCB, PCB_size);
     mostrarPCB(ProcessCB, PCB_size);
 
     return;
