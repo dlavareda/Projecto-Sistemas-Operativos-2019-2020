@@ -9,11 +9,11 @@
 // int* Bloqueados; //array de inteiros com os PID dos processos bloqueados
 //} Gestor;
 //Função para executar o programa
-void executarPrograma(Memory *RAM, int RAM_size, int PID, PCB *ProcessCB, int PCB_size)
+void executarPrograma(Memory *RAM, int RAM_size, int PID, PCB *ProcessCB, int *PCB_size)
 {
     int indicePCB = -1;
     int start = -1, end = -1;
-    for (int i = 0; i < PCB_size; i++)
+    for (int i = 0; i < (*PCB_size); i++)
     {
         if (ProcessCB[i].PID == PID)
         {
@@ -30,15 +30,23 @@ void executarPrograma(Memory *RAM, int RAM_size, int PID, PCB *ProcessCB, int PC
     {
         if (RAM[i].instrucao[0] == 77) //EXECUTAR O M
         {
-            M(ProcessCB, PCB_size, PID, RAM[i].valor);
+            M(ProcessCB, (*PCB_size), PID, RAM[i].valor);
         }
         if (RAM[i].instrucao[0] == 65) //EXECUTAR O A
         {
-            A(ProcessCB, PCB_size, PID, RAM[i].valor);
+            A(ProcessCB, (*PCB_size), PID, RAM[i].valor);
         }
         if (RAM[i].instrucao[0] == 83) //EXECUTAR O S
         {
-            S(ProcessCB, PCB_size, PID, RAM[i].valor);
+            S(ProcessCB, (*PCB_size), PID, RAM[i].valor);
+        }
+        if (RAM[i].instrucao[0] == 67) //EXECUTAR O S
+        {
+            C(ProcessCB, PCB_size, PID, RAM[i].valor);
+        }
+        if (RAM[i].instrucao[0] == 84) //EXECUTAR O T
+        {
+            T(ProcessCB, PCB_size, PID);
         }
     }
 }

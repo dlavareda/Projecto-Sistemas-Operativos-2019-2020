@@ -84,9 +84,9 @@ void inicializarPCB(PCB *ProcessCB, int *PCB_size)
     ProcessCB[0].estado = 1;
     *PCB_size = 1;
 }
-void adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria)
+int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria)
 {
-    int i = *PCB_size;
+    int i = (*PCB_size);
     strcpy(ProcessCB[i].nome_processo, nome);
     ProcessCB[i].start = primeiroElementoMemoria;
     ProcessCB[i].variavel = 0;
@@ -96,6 +96,7 @@ void adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int pri
     ProcessCB[i].prioridade = 0;
     ProcessCB[i].estado = 1;
     (*PCB_size)++;
+    return i;
 }
 int main()
 {
@@ -123,13 +124,14 @@ int main()
     int novoProgramaSize = 0;
     int startPrograma = 0;
     Memory *novoPrograma;
+    int novoPCB = 0;
     for (int i = 0; i < plano_size; i++)
     {
         startPrograma = (RAM_size);
         novoPrograma = lerProcesso(plano[i].programa, &novoProgramaSize);
         adicionarProgramaRAM(RAM, &RAM_size, novoPrograma, novoProgramaSize);
         //Adiciona o programa recem carregado ao PCB
-        adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma);
+        novoPCB = adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma);
         free(novoPrograma);
         novoProgramaSize = 0;
     }
@@ -140,7 +142,7 @@ int main()
     ////////////////////////     Executar o programa.txt   //////////////////////////////////
 
     int PID = 1; //executar programa PID 1
-    executarPrograma(RAM, RAM_size, PID, ProcessCB, PCB_size);
+    executarPrograma(RAM, RAM_size, PID, ProcessCB, &PCB_size);
     mostrarPCB(ProcessCB, PCB_size);
 
     return;
