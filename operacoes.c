@@ -61,6 +61,8 @@ void C(PCB *ProcessCB, int *PCB_size, int PID, int valor)
         }
     }
 }
+
+//função adaptada da UC Programação II
 int PesquisaExaustiva(PCB X, PCB *L, int N)
 {
     int i;
@@ -73,6 +75,8 @@ int PesquisaExaustiva(PCB X, PCB *L, int N)
     }
     return -1; //não existe
 }
+
+//função adaptada da UC Programação II
 PCB *Remover(PCB X, PCB *L, int *N)
 {
     int i, pos;

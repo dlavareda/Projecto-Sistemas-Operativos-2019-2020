@@ -25,7 +25,12 @@ void executarPrograma(Memory *RAM, int RAM_size, int PID, PCB *ProcessCB, int *P
             end = (ProcessCB[i].start - 1);
         }
     }
-
+    //para o caso de ser o ultimo processo em memoria
+    if (end == -1)
+    {
+        end = RAM_size;
+    }
+    
     for (int i = start; i <= end; i++)
     {
         if (RAM[i].instrucao[0] == 77) //EXECUTAR O M

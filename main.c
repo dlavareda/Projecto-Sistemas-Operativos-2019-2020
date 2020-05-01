@@ -141,7 +141,8 @@ int main()
     mostrarPCB(ProcessCB, PCB_size);
     ////////////////////////     Executar o programa.txt   //////////////////////////////////
 
-    int PID = 1; //executar programa PID 1
+    //teste para executar um processo dando o PID
+    int PID = 3; //executar programa PID 1
     executarPrograma(RAM, RAM_size, PID, ProcessCB, &PCB_size);
     mostrarPCB(ProcessCB, PCB_size);
 
