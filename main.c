@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//definição da palete de cores
+#define Normal "\x1B[0m"
+#define Vermelho "\x1B[31m"
+#define Verde "\x1B[32m"
+#define Amarelo "\x1B[33m"
+#define Azul "\x1B[34m"
+#define Magenta "\x1B[35m"
+#define Ciano "\x1B[36m"
+#define CinzaClaro "\x1b[90m"
+#define VermelhoClaro "\x1b[91m"
+#define VerdeClaro "\x1b[92m"
+#define AmareloClaro "\x1b[93m"
+#define AzulClaro "\x1b[94m"
+#define MagentaClaro "\x1b[95m"
+#define CianoClaro "\x1b[96m"
 //Definição da estrutura PCB
 typedef struct PCB
 {
@@ -12,6 +27,9 @@ typedef struct PCB
     int PPID;
     int prioridade;
     int estado;
+    int tempo_chegada;
+    int tempo_burst;
+    int tempo_cpu;
 } PCB;
 
 //Definição da estrutura memoria
@@ -30,6 +48,7 @@ typedef struct plan
 #include "ficheiros.c"
 #include "operacoes.c"
 #include "execute.c"
+#include "escalonadores.c"
 //Função para ler novo processo
 Memory *lerProcesso(char *, int *);
 //Função para carregar o novo programa aos proximos lugares na memoria
@@ -60,6 +79,9 @@ void mostrarPCB(PCB *ProcessCB, int PCB_size)
         printf("PPID %d\n", ProcessCB[i].PPID);
         printf("Prioridade %d\n", ProcessCB[i].prioridade);
         printf("Estado %d\n", ProcessCB[i].estado);
+        printf("Tempo chegada %d\n", ProcessCB[i].tempo_chegada);
+        printf("Tempo burst %d\n", ProcessCB[i].tempo_burst);
+        printf("Tempo CPU %d\n", ProcessCB[i].tempo_cpu);
     }
 }
 
@@ -84,8 +106,11 @@ void inicializarPCB(PCB *ProcessCB, int *PCB_size)
     ProcessCB[0].prioridade = 0;
     ProcessCB[0].estado = 1;
     *PCB_size = 1;
+    ProcessCB[0].tempo_chegada = 0;
+    ProcessCB[0].tempo_burst = 0;
+    ProcessCB[0].tempo_cpu = 0;
 }
-int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria)
+int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria, int tempo_chegada, int tempo_burst)
 {
     int i = (*PCB_size);
     strcpy(ProcessCB[i].nome_processo, nome);
@@ -96,6 +121,9 @@ int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int prim
     ProcessCB[i].PPID = 0;
     ProcessCB[i].prioridade = 0;
     ProcessCB[i].estado = 1;
+    ProcessCB[i].tempo_chegada = tempo_chegada;
+    ProcessCB[i].tempo_burst = tempo_burst;
+    ProcessCB[i].tempo_cpu = 0;
     (*PCB_size)++;
     return i;
 }
@@ -118,6 +146,8 @@ int main()
         printf("2 - Mostrar RAM\n");
         printf("3 - Mostrar PCB\n");
         printf("4 - Executar programa\n");
+        printf("5 - Executar escalonador FCFS (Opção temporaria para mostrar ordem de execussao)\n");
+        printf("6 - Executar escalonador SJF(NP) (Opção temporaria para mostrar ordem de execussao)\n");
         printf("9 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
@@ -144,7 +174,7 @@ int main()
                 novoPrograma = lerProcesso(plano[i].programa, &novoProgramaSize);
                 adicionarProgramaRAM(RAM, &RAM_size, novoPrograma, novoProgramaSize);
                 //Adiciona o programa recem carregado ao PCB
-                novoPCB = adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma);
+                novoPCB = adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma, plano[i].tempo_chegada, novoProgramaSize);
                 free(novoPrograma);
                 novoProgramaSize = 0;
             }
@@ -170,6 +200,14 @@ int main()
             int PID = 1; //executar programa PID 1
             executarPrograma(RAM, RAM_size, PID, ProcessCB, &PCB_size);
             printf("\n");
+        }
+        else if (resp == 5)
+        {
+            FCFS(ProcessCB, PCB_size);
+        }
+        else if (resp == 6)
+        {
+            SJF(ProcessCB, PCB_size);
         }
     }
     return;
