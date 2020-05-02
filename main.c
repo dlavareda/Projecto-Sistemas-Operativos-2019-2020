@@ -197,7 +197,9 @@ int main()
         }
         else if (resp == 4)
         {
-            int PID = 1; //executar programa PID 1
+            int PID; //executar programa PID 1
+            printf("Insira o PID do programa a executar\n");
+            scanf("%d", &PID);
             executarPrograma(RAM, RAM_size, PID, ProcessCB, &PCB_size);
             printf("\n");
         }
