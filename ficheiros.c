@@ -36,13 +36,7 @@ Memory *lerProcesso(char *nomePrograma, int *programaSize)
             Processo[i].valor = 0;
             strcpy(Processo[i].nome, aux[i].campo2);
         }
-        else if ((aux[i].campo1[0] == 84))
-        {
-            strcpy(Processo[i].instrucao, aux[i].campo1);
-            Processo[i].valor = 0;
-            strcpy(Processo[i].nome, "NULL");
-        }
-        else if ((aux[i].campo1[0] == 66)) //B
+        else if ((aux[i].campo1[0] == 66) || (aux[i].campo1[0] == 84)) //B
         {
             strcpy(Processo[i].instrucao, aux[i].campo1);
             Processo[i].valor = 0;
