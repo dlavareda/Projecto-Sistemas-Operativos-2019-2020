@@ -30,7 +30,7 @@ Gestor *inicializarGestor(PCB *PCBtabela, int PCB_size)
     return gest;
 }
 //Função para executar o programa
-void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *PCB_size)
+void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *PCB_size, int *TIME)
 {
     int indicePCB = -1;
     int start = -1, end = -1;
@@ -56,32 +56,44 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
     {
         if (RAM[i].instrucao[0] == 77) //EXECUTAR O M
         {
+            (*TIME)++;
             ProcessCB[indicePCB].PC++;
+            ProcessCB[indicePCB].tempo_cpu++;
             M(ProcessCB, (*PCB_size), PID, RAM[i].valor);
         }
         if (RAM[i].instrucao[0] == 65) //EXECUTAR O A
         {
+            (*TIME)++;
             ProcessCB[indicePCB].PC++;
+            ProcessCB[indicePCB].tempo_cpu++;
             A(ProcessCB, (*PCB_size), PID, RAM[i].valor);
         }
         if (RAM[i].instrucao[0] == 83) //EXECUTAR O S
         {
+            (*TIME)++;
             ProcessCB[indicePCB].PC++;
+            ProcessCB[indicePCB].tempo_cpu++;
             S(ProcessCB, (*PCB_size), PID, RAM[i].valor);
         }
         if (RAM[i].instrucao[0] == 67) //EXECUTAR O C
         {
+            (*TIME)++;
             ProcessCB[indicePCB].PC++;
-        //    C(ProcessCB, PCB_size, PID, (RAM[i].valor - 1)); //valor -1 pois um ja foi incrementado acima
+            ProcessCB[indicePCB].tempo_cpu++;
+            C(ProcessCB, PCB_size, PID, (RAM[i].valor - 1)); //valor -1 pois um ja foi incrementado acima
         }
         if (RAM[i].instrucao[0] == 84) //EXECUTAR O T
         {
+            (*TIME)++;
             ProcessCB[indicePCB].PC++;
+            ProcessCB[indicePCB].tempo_cpu++;
             T(ProcessCB, PCB_size, PID);
         }
         if (RAM[i].instrucao[0] == 76) //EXECUTAR O L
         {
+            (*TIME)++;
             ProcessCB[indicePCB].PC++;
+            ProcessCB[indicePCB].tempo_cpu++;
             L(ProcessCB, PCB_size, PID, RAM[i].nome, RAM, RAM_size);
         }
     }

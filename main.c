@@ -129,6 +129,7 @@ int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int prim
 }
 int main()
 {
+    int TIME = 0;
     //Definição da memoria até 1000 instruções
     int RAM_size = 0; //variavel com o numero de slots de memoria ocupados
     Memory *RAM = malloc((1000 * sizeof(Memory)));
@@ -199,8 +200,8 @@ int main()
         else if (resp == 4)
         {
             printf("Insira o PID do programa a executar\n");
-            scanf("%d", &PID);           
-            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size);           
+            scanf("%d", &PID);
+            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size, &TIME);
             printf("\n");
         }
         else if (resp == 5)
@@ -212,5 +213,6 @@ int main()
             SJF(ProcessCB, PCB_size);
         }
     }
+    printf("Foram executadas %d operações\n", TIME);
     return;
 }

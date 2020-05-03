@@ -93,9 +93,7 @@ void SJF(PCB *arr_processos, int arr_processos_size) //Shortest-Job-First Não P
         //percorrer o arr_tmp e chamar os prints
         for (int w = 0; w < tamanho_arr_tmp; w++)
         {
-
             barraProgressoAdicionarElemento(arr_tmp[w].PID, obterCor(arr_tmp[w].PID));
-
             printf("%s->", Normal);
         }
 
