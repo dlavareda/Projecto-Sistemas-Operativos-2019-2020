@@ -140,6 +140,7 @@ int main()
     int PCB_size = 0;
 
     int resp = 0;
+    int PID;
     while (resp != 9)
     {
         printf("1 - Carregar Dados\n");
@@ -197,10 +198,9 @@ int main()
         }
         else if (resp == 4)
         {
-            int PID; //executar programa PID 1
             printf("Insira o PID do programa a executar\n");
-            scanf("%d", &PID);
-            executarPrograma(RAM, RAM_size, PID, ProcessCB, &PCB_size);
+            scanf("%d", &PID);           
+            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size);           
             printf("\n");
         }
         else if (resp == 5)
