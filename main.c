@@ -218,7 +218,6 @@ int main()
 
             ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
             gest = inicializarGestor(ProcessCB, PCB_size);
-            mostrarProcessosReady(gest);
         }
         else if (resp == 2)
         {
