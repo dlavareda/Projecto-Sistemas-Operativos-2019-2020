@@ -31,16 +31,7 @@ void S(PCB *ProcessCB, int PCB_size, int PID, int valor)
         }
     }
 }
-void B(PCB *ProcessCB, int PCB_size, int PID)
-{
-    for (int i = 0; i < PCB_size; i++)
-    {
-        if (ProcessCB[i].PID == PID)
-        {
-            ProcessCB[i].estado = 2; //1 - Pronto 2-Blocked
-        }
-    }
-}
+
 void C(PCB *ProcessCB, int *PCB_size, int PID, int valor)
 {
 
@@ -132,4 +123,40 @@ void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RA
             free(novoPrograma);
         }
     }
+}
+//função adaptada da UC Programação II
+int *RemoverProntos(int *L, int pos, int *N)
+{
+    int i;
+    for (i = pos; i < *N - 1; i++)
+    {
+        L[i] = L[i + 1];
+    }
+    *N = *N - 1;
+    L = (PCB *)realloc(L, (*N) * sizeof(int));
+    return L;
+}
+
+void B(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
+{
+    //tem de alterar o estado no PCB
+    for (int i = 0; i < (*PCB_size); i++)
+    {
+        if (ProcessCB[i].PID == PID) //encontra o elemento
+        {
+            ProcessCB[i].estado = 2; //1 pronto, 2 bloqueado
+        }
+    }
+    int i = 0;
+    while (gest->Prontos[i] != PID)
+    { //encontra a posição no array prontos do PID
+        i++;
+    }
+    //remove do array Prontos
+    gest->Prontos = RemoverProntos(gest->Prontos, i, &gest->prontos_size);
+    //adiciona ao array Bloqueados
+    gest->bloqueados_size++;
+    gest->Bloqueados = (int *)realloc(gest->Bloqueados, gest->bloqueados_size * sizeof(int));
+    gest->Bloqueados[gest->bloqueados_size - 1] = PID;
+
 }

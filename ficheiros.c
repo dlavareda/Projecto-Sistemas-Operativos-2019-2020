@@ -42,6 +42,12 @@ Memory *lerProcesso(char *nomePrograma, int *programaSize)
             Processo[i].valor = 0;
             strcpy(Processo[i].nome, "NULL");
         }
+        else if ((aux[i].campo1[0] == 66)) //B
+        {
+            strcpy(Processo[i].instrucao, aux[i].campo1);
+            Processo[i].valor = 0;
+            strcpy(Processo[i].nome, "NULL");
+        }
     }
     free(aux);
     *programaSize = i;

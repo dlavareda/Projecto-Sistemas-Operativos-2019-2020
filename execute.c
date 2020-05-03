@@ -1,22 +1,10 @@
-//criação da estrutura do Gestor de processos
-typedef struct Gestor
-{
-    int tempo;
-    int RunningState; //indice do PCB do processo em execussao
-    int PC;           //PC do processo em execução
-    PCB *PCBtabela;   //apontador para o PCB
-    int *Prontos;     //array de inteiros com os PID dos processos em execussao
-    int prontos_size;
-    int *Bloqueados; //array de inteiros com os PID dos processos bloqueados
-    int bloqueados_size;
-
-} Gestor;
-
 //função irá incorporar o PCBtabela e inicializar os restantes campos
 Gestor *inicializarGestor(PCB *PCBtabela, int PCB_size)
 {
     Gestor *gest = malloc(sizeof(Gestor));
+    gest->bloqueados_size = 0;
     gest->prontos_size = 0;
+    gest->Bloqueados = malloc(0);
     gest->tempo = 0;
     gest->PC = 0;
     gest->PCBtabela = PCBtabela;
@@ -30,7 +18,7 @@ Gestor *inicializarGestor(PCB *PCBtabela, int PCB_size)
     return gest;
 }
 //Função para executar o programa
-void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *PCB_size, int *TIME)
+void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *PCB_size, int *TIME, Gestor *gest)
 {
     int indicePCB = -1;
     int start = -1, end = -1;
@@ -95,6 +83,13 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
             ProcessCB[indicePCB].PC++;
             ProcessCB[indicePCB].tempo_cpu++;
             L(ProcessCB, PCB_size, PID, RAM[i].nome, RAM, RAM_size);
+        }
+        if (RAM[i].instrucao[0] == 66) //EXECUTAR O B
+        {
+            (*TIME)++;
+            ProcessCB[indicePCB].PC++;
+            ProcessCB[indicePCB].tempo_cpu++;
+            B(ProcessCB, PCB_size, PID, gest);
         }
     }
 }

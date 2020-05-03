@@ -45,6 +45,20 @@ typedef struct plan
     char programa[15];
     int tempo_chegada;
 } plan;
+//criação da estrutura do Gestor de processos
+typedef struct Gestor
+{
+    int tempo;
+    int RunningState; //indice do PCB do processo em execussao
+    int PC;           //PC do processo em execução
+    PCB *PCBtabela;   //apontador para o PCB
+    int *Prontos;     //array de inteiros com os PID dos processos em execussao
+    int prontos_size;
+    int *Bloqueados; //array de inteiros com os PID dos processos bloqueados
+    int bloqueados_size;
+
+} Gestor;
+
 #include "ficheiros.c"
 #include "operacoes.c"
 #include "execute.c"
@@ -127,6 +141,25 @@ int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int prim
     (*PCB_size)++;
     return i;
 }
+//Função para listar processos prontos no gestor
+void mostrarProcessosReady(Gestor *gest)
+{
+    //Começa em 1 para ignorar o processo 0 escalonador
+    for (int i = 1; i < gest->prontos_size; i++)
+    {
+        printf("Processo %d Ready\n", gest->Prontos[i]);
+    }
+}
+//Função para listar processos bloqueados no gestor
+
+void mostrarProcessosBlocked(Gestor *gest)
+{
+    //Começa em 1 para ignorar o processo 0 escalonador
+    for (int i = 0; i < gest->bloqueados_size; i++)
+    {
+        printf("Processo %d Blocked\n", gest->Bloqueados[i]);
+    }
+}
 int main()
 {
     int TIME = 0;
@@ -139,7 +172,7 @@ int main()
     //Definição da estrutura PCB
     PCB *ProcessCB = malloc(100 * sizeof(PCB));
     int PCB_size = 0;
-
+    Gestor *gest;
     int resp = 0;
     int PID;
     while (resp != 9)
@@ -150,6 +183,8 @@ int main()
         printf("4 - Executar programa\n");
         printf("5 - Executar escalonador FCFS (Opção temporaria para mostrar ordem de execussao)\n");
         printf("6 - Executar escalonador SJF(NP) (Opção temporaria para mostrar ordem de execussao)\n");
+        printf("7 - Mostrar Processos Ready (Opção temporaria para mostrar ordem de execussao)\n");
+        printf("8 - Mostrar Processos Bloqueados (Opção temporaria para mostrar ordem de execussao)\n");
         printf("9 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
@@ -182,12 +217,8 @@ int main()
             }
 
             ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
-            Gestor *gest = inicializarGestor(ProcessCB, PCB_size);
-            //Começa em 1 para ignorar o processo 0 escalonador
-            for (int i = 1; i < gest->prontos_size; i++)
-            {
-                printf("Processo %d Ready\n", gest->Prontos[i]);
-            }
+            gest = inicializarGestor(ProcessCB, PCB_size);
+            mostrarProcessosReady(gest);
         }
         else if (resp == 2)
         {
@@ -201,7 +232,7 @@ int main()
         {
             printf("Insira o PID do programa a executar\n");
             scanf("%d", &PID);
-            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size, &TIME);
+            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size, &TIME, gest);
             printf("\n");
         }
         else if (resp == 5)
@@ -211,6 +242,12 @@ int main()
         else if (resp == 6)
         {
             SJF(ProcessCB, PCB_size);
+        }else if (resp == 7)
+        {
+            mostrarProcessosReady(gest);
+        }else if (resp == 8)
+        {
+            mostrarProcessosBlocked(gest);
         }
     }
     printf("Foram executadas %d operações\n", TIME);
