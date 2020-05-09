@@ -180,7 +180,6 @@ int main()
     //Criação da estrutura que recebe o control.txt
     control *controlo = malloc(0);
     int size_control = 0;
-    size_control = lerControl(controlo);
     //Definição da estrutura PCB
     PCB *ProcessCB = malloc(100 * sizeof(PCB));
     int PCB_size = 0;
@@ -195,6 +194,69 @@ int main()
         scanf("%d", &resp);
         if (resp == 1)
         {
+            printf("Executando com o FCFS\n");
+            /////////////////////////////////////////////// leitura do control.txt  ///////////////////////////////////////////////
+            size_control = lerControl(controlo);
+            ///////////////////////////////////////////////     Leitura do Plano    ///////////////////////////////////////////////
+
+            //Faz a leitura do ficheiro plan.txt e adiciona a estrutura
+            plano_size = lerPlan(plano);
+
+            ////////////////////////////////////////     Inicialização do PCB    //////////////////////////////////////////////////
+
+            //inicializar PCB
+            inicializarPCB(ProcessCB, &PCB_size);
+
+            ////////////////////////     Carregamento dos Programas do plano para RAM do Plano    //////////////////////////////////
+
+            int novoProgramaSize = 0;
+            int startPrograma = 0;
+            Memory *novoPrograma;
+            int novoPCB = 0;
+            for (int i = 0; i < plano_size; i++)
+            {
+                startPrograma = (RAM_size);
+                novoPrograma = lerProcesso(plano[i].programa, &novoProgramaSize);
+                adicionarProgramaRAM(RAM, &RAM_size, novoPrograma, novoProgramaSize);
+                //Adiciona o programa recem carregado ao PCB
+                novoPCB = adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma, plano[i].tempo_chegada, novoProgramaSize);
+                free(novoPrograma);
+                novoProgramaSize = 0;
+            }
+
+            ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
+            gest = inicializarGestor(ProcessCB, PCB_size);
+            for (int i = 0; i < size_control; i++)
+            {
+                if (strcmp(controlo[i].programa, "E"))
+                {
+                }
+            }
+            ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
+            ProcessCB = FCFS(ProcessCB, PCB_size);
+            mostrarPCB(ProcessCB, PCB_size);
+            /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
+            for (int i = 0; i < size_control; i++)
+            {
+                if (strcmp(controlo[i].programa, "E")) //Caso seja E
+                {
+                    printf("\nExecução E%d\n", i + 1);
+                    executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
+                    mostrarPCB(ProcessCB, PCB_size);
+                }
+                else if (strcmp(controlo[i].programa, "I")) //Caso seja I
+                {
+                }
+                else if (strcmp(controlo[i].programa, "R")) //Caso seja R
+                {
+                }
+                else if (strcmp(controlo[i].programa, "T")) //Caso seja T
+                {
+                }
+                else if (strcmp(controlo[i].programa, "D")) //Caso seja D
+                {
+                }
+            }
         }
         else if (resp == 2)
         {
