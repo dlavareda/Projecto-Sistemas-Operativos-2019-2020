@@ -64,3 +64,19 @@ int lerPlan(plan *Plano)
     fclose(f);
     return i;
 }
+int lerControl(control *Controlo)
+{
+    FILE *f;
+    f = fopen("control.txt", "r");
+    int i = 0;
+    char programa[1];
+    int tempo_chegada;
+    while (fscanf(f, "%s", &programa) == 1)
+    {
+        Controlo = realloc(Controlo, (i+1)*sizeof(control));
+        strcpy(Controlo[i].programa, programa);
+        i++;
+    }
+    fclose(f);
+    return i;
+}

@@ -45,6 +45,12 @@ typedef struct plan
     char programa[15];
     int tempo_chegada;
 } plan;
+
+//definição da estrutura control
+typedef struct control
+{
+    char programa[1];
+} control;
 //criação da estrutura do Gestor de processos
 typedef struct Gestor
 {
@@ -171,6 +177,10 @@ int main()
     //Definição da estrutura Plano
     plan *plano = malloc(20 * sizeof(plan));
     int plano_size = 0; //variavel com o numero de programas recebidos no plan.txt
+    //Criação da estrutura que recebe o control.txt
+    control *controlo = malloc(0);
+    int size_control = 0;
+    size_control = lerControl(controlo);
     //Definição da estrutura PCB
     PCB *ProcessCB = malloc(100 * sizeof(PCB));
     int PCB_size = 0;
@@ -179,7 +189,7 @@ int main()
     int PID;
     while (resp != 3)
     {
-        printf("1 - Executar PLAN\n");
+        printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
         printf("3 - Sair\n");
         scanf("%d", &resp);
