@@ -132,7 +132,18 @@ int *RemoverProntos(int *L, int pos, int *N)
     L = (PCB *)realloc(L, (*N) * sizeof(int));
     return L;
 }
-
+//função adaptada da UC Programação II
+int *RemoverBloqueados(int *L, int pos, int *N)
+{
+    int i;
+    for (i = pos; i < *N - 1; i++)
+    {
+        L[i] = L[i + 1];
+    }
+    *N = *N - 1;
+    L = (PCB *)realloc(L, (*N) * sizeof(int));
+    return L;
+}
 void B(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
 {
     //tem de alterar o estado no PCB

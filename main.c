@@ -168,6 +168,25 @@ void mostrarProcessosBlocked(Gestor *gest)
         printf("Processo %d Blocked\n", gest->Bloqueados[i]);
     }
 }
+
+void EscalonadorLPrazo(PCB *ProcessCB, int *PCB_size, Gestor *gest)
+{
+    //tem de alterar o estado no PCB
+    for (int i = 0; i < PCB_size; i++)
+    {
+        ProcessCB[i].estado = 1; //1 pronto, 2 bloqueado
+    }
+
+    for (int i = 0; i < gest->bloqueados_size; i++)
+    {
+        //adiciona ao array Bloqueados
+        gest->prontos_size++;
+        gest->Prontos = (int *)realloc(gest->Prontos, gest->prontos_size * sizeof(int));
+        gest->Prontos[gest->prontos_size - 1] = gest->Bloqueados[i];
+        //remove do array Bloqueados
+        gest->Bloqueados = RemoverBloqueados(gest->Bloqueados, i, &gest->bloqueados_size);
+    }
+}
 int main()
 {
     int TIME = 0;
@@ -186,11 +205,14 @@ int main()
     Gestor *gest;
     int resp = 0;
     int PID;
-    while (resp != 3)
+    while (resp != 5)
     {
         printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
-        printf("3 - Sair\n");
+        printf("3 - Motrar readys\n");
+        printf("4 - Motrar bloqueados\n");
+        printf("5 - Sair\n");
+
         scanf("%d", &resp);
         if (resp == 1)
         {
@@ -226,37 +248,47 @@ int main()
 
             ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
             gest = inicializarGestor(ProcessCB, PCB_size);
-            for (int i = 0; i < size_control; i++)
-            {
-                if (strcmp(controlo[i].programa, "E"))
-                {
-                }
-            }
+
             ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
             ProcessCB = FCFS(ProcessCB, PCB_size);
-            mostrarPCB(ProcessCB, PCB_size);
+            //     mostrarPCB(ProcessCB, PCB_size);
             /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
             for (int i = 0; i < size_control; i++)
             {
-                if (strcmp(controlo[i].programa, "E")) //Caso seja E
+                if (controlo[i].programa[0] == 69) //Caso seja E
                 {
-                    printf("\nExecução E%d\n", i + 1);
+                    printf("\nExecução E\n");
                     executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
-                    mostrarPCB(ProcessCB, PCB_size);
+                    //mostrarPCB(ProcessCB, PCB_size);
+                    mostrarProcessosBlocked(gest);
                 }
-                else if (strcmp(controlo[i].programa, "I")) //Caso seja I
+                else if (controlo[i].programa[0] == 73) //Caso seja I
+                {
+                    printf("\nExecução I\n");
+                    //reutilização da operação B para bloquear o processo em execussao
+                    B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
+                    mostrarProcessosBlocked(gest);
+                }
+                else if (controlo[i].programa[0] == 82) //Caso seja R
                 {
                 }
-                else if (strcmp(controlo[i].programa, "R")) //Caso seja R
+                else if (controlo[i].programa[0] == 84) //Caso seja T
                 {
                 }
-                else if (strcmp(controlo[i].programa, "T")) //Caso seja T
+                else if (controlo[i].programa[0] == 68) //Caso seja D
                 {
-                }
-                else if (strcmp(controlo[i].programa, "D")) //Caso seja D
-                {
+                    printf("\nExecução D\n");
+                    EscalonadorLPrazo(ProcessCB, PCB_size, gest);
                 }
             }
+        }
+        else if (resp == 3)
+        {
+            mostrarProcessosReady(gest);
+        }
+        else if (resp == 4)
+        {
+            mostrarProcessosBlocked(gest);
         }
         else if (resp == 2)
         {

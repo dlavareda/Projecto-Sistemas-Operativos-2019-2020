@@ -20,10 +20,12 @@ Gestor *inicializarGestor(PCB *PCBtabela, int PCB_size)
 //Função para executar o programa
 void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *PCB_size, int *TIME, Gestor *gest, int N_instrucoes)
 {
+
     int indicePCB = -1;
     int start = -1, end = -1;
     for (int i = 0; i < (*PCB_size); i++)
     {
+
         if (ProcessCB[i].PID == PID)
         {
             start = ProcessCB[i].start + ProcessCB[i].PC; //retomar execussão anteriormente parada
@@ -44,6 +46,12 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
     {
         if (i < (start + N_instrucoes))
         {
+            //Nao executar um processo bloqueado
+            if (ProcessCB[indicePCB].estado == 2)
+            {
+                printf("Nao pode executar um processo bloqueado\n");
+                return;
+            }
             if (RAM[i].instrucao[0] == 77) //EXECUTAR O M
             {
                 (*TIME)++;
@@ -97,7 +105,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
         }
         else
         {
-            printf("valor = %d", ProcessCB[indicePCB].variavel);
+          //  printf("Executadas 5 instruções, valor actual = %d\n", ProcessCB[indicePCB].variavel);
             return; //Ja executou o numero de instruções indicada
         }
     }
