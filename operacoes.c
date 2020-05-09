@@ -85,15 +85,11 @@ PCB *Remover(PCB X, PCB *L, int *N)
             L[i] = L[i + 1];
         }
         *N = *N - 1;
-        printf("\nANTES(remove.c)Tamanho PCB %d\n", (*N));
-        // L = (PCB *)realloc(L, (*N) * sizeof(PCB));
     }
     return L;
 }
 void T(PCB *ProcessCB, int *PCB_size, int PID)
 {
-    printf("\n(T.c)Tamanho PCB %d\n", (*PCB_size));
-
     //remover do PCB
     for (int i = 0; i < (*PCB_size); i++)
     {

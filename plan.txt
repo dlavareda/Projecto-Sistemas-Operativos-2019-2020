@@ -1,1 +1,2 @@
-progenitor.prg 0
+progenitor.prg 10
+filho1.prg 0
