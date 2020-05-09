@@ -1,4 +1,4 @@
-char *obterCor(char *Processo)
+char *obterCor(int Processo)
 {
     if (Processo == 1)
     {

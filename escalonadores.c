@@ -61,7 +61,7 @@ PCB *FCFS(PCB *arr_processos, int arr_processos_size) //First Come First Served
 
 void swap(PCB *xp, PCB *yp)
 {
-    PCB *aux;
+    PCB *aux = malloc(sizeof(PCB));
     strcpy(aux->nome_processo, xp->nome_processo);
     aux->PID = xp->PID;
     aux->tempo_burst = xp->tempo_burst;
@@ -74,6 +74,7 @@ void swap(PCB *xp, PCB *yp)
     yp->PID = aux->PID;
     yp->tempo_burst = aux->tempo_burst;
     yp->tempo_chegada = aux->tempo_chegada;
+    free(aux);
 }
 
 void bubbleSort(PCB *arr, int n)
@@ -97,7 +98,6 @@ PCB *SJF(PCB *arr_processos, int arr_processos_size) //Shortest-Job-First Não P
 {
 
     //printf("Linha de execussão dos processos usando o algoritmo de escalonamento Shortest-Job-First (Não Preemptivo)\n");
-    int actual = 0;
     PCB *ordenado = malloc(arr_processos_size * sizeof(PCB));
     //para nao mexer no PID 0 Escalonador
     strcpy(ordenado[0].nome_processo, arr_processos[0].nome_processo);

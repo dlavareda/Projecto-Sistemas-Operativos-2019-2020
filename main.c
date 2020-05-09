@@ -378,5 +378,5 @@ int main()
     }
 
     printf("Foram executadas %d operações\n", TIME);
-    return;
+    return 0;
 }

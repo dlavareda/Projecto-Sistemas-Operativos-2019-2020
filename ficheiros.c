@@ -12,7 +12,7 @@ Memory *lerProcesso(char *nomePrograma, int *programaSize)
     int i = 0;
     char campo1[1];
     char campo2[15];
-    ProcessoAux *aux = calloc(aux, 0);
+    ProcessoAux *aux = calloc(0, 0);
     while (fscanf(f, "%s %s", campo1, campo2) >= 1)
     {
         aux = realloc(aux, (i + 1) * sizeof(ProcessoAux));
@@ -55,7 +55,7 @@ int lerPlan(plan *Plano)
     int i = 0;
     char programa[15];
     int tempo_chegada;
-    while (fscanf(f, "%s %d", &programa, &tempo_chegada) == 2)
+    while (fscanf(f, "%s %d", programa, &tempo_chegada) == 2)
     {
         strcpy(Plano[i].programa, programa);
         Plano[i].tempo_chegada = tempo_chegada;
@@ -70,10 +70,9 @@ int lerControl(control *Controlo)
     f = fopen("control.txt", "r");
     int i = 0;
     char programa[1];
-    int tempo_chegada;
-    while (fscanf(f, "%s", &programa) == 1)
+    while (fscanf(f, "%s", programa) == 1)
     {
-        Controlo = realloc(Controlo, (i+1)*sizeof(control));
+        Controlo = realloc(Controlo, (i + 1) * sizeof(control));
         strcpy(Controlo[i].programa, programa);
         i++;
     }

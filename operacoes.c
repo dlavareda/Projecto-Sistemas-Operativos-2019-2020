@@ -54,7 +54,6 @@ void C(PCB *ProcessCB, int *PCB_size, int PID, int valor)
             //ProcessCB[novoPCB].tempo_chegada //terá de ser o momento atual
             //aumentar valor no PCB do pai
             ProcessCB[i].PC += valor;
-            char nome_processo[15];
         }
     }
 }
@@ -129,7 +128,7 @@ int *RemoverProntos(int *L, int pos, int *N)
         L[i] = L[i + 1];
     }
     *N = *N - 1;
-    L = (PCB *)realloc(L, (*N) * sizeof(int));
+    L = (int *)realloc(L, (*N) * sizeof(int));
     return L;
 }
 //função adaptada da UC Programação II
@@ -141,7 +140,7 @@ int *RemoverBloqueados(int *L, int pos, int *N)
         L[i] = L[i + 1];
     }
     *N = *N - 1;
-    L = (PCB *)realloc(L, (*N) * sizeof(int));
+    L = (int *)realloc(L, (*N) * sizeof(int));
     return L;
 }
 void B(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
