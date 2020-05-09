@@ -181,10 +181,10 @@ int main()
         printf("2 - Mostrar RAM\n");
         printf("3 - Mostrar PCB\n");
         printf("4 - Executar programa\n");
-        printf("5 - Executar escalonador FCFS (Opção temporaria para mostrar ordem de execussao)\n");
-        printf("6 - Executar escalonador SJF(NP) (Opção temporaria para mostrar ordem de execussao)\n");
-        printf("7 - Mostrar Processos Ready (Opção temporaria para mostrar ordem de execussao)\n");
-        printf("8 - Mostrar Processos Bloqueados (Opção temporaria para mostrar ordem de execussao)\n");
+        printf("5 - Executar escalonador de curto prazo FCFS\n");
+        printf("6 - Executar escalonador de curto prazo SJF\n");
+        printf("7 - Mostrar Processos Ready\n");
+        printf("8 - Mostrar Processos Bloqueados\n");
         printf("9 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
@@ -229,9 +229,12 @@ int main()
         }
         else if (resp == 4)
         {
+            int N_instrucoes = 0;
             printf("Insira o PID do programa a executar\n");
             scanf("%d", &PID);
-            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size, &TIME, gest);
+            printf("Insira o numero de instruções a executar\n");
+            scanf("%d", &N_instrucoes);
+            executarPrograma(RAM, &RAM_size, PID, ProcessCB, &PCB_size, &TIME, gest, N_instrucoes);
             printf("\n");
         }
         else if (resp == 5)
@@ -241,10 +244,12 @@ int main()
         else if (resp == 6)
         {
             SJF(ProcessCB, PCB_size);
-        }else if (resp == 7)
+        }
+        else if (resp == 7)
         {
             mostrarProcessosReady(gest);
-        }else if (resp == 8)
+        }
+        else if (resp == 8)
         {
             mostrarProcessosBlocked(gest);
         }
