@@ -86,6 +86,13 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
                 ProcessCB[indicePCB].PC++;
                 ProcessCB[indicePCB].tempo_cpu++;
                 T(ProcessCB, PCB_size, PID);
+                int i = 0;
+                while (gest->Prontos[i] != PID)
+                { //encontra a posição no array prontos do PID
+                    i++;
+                }
+                //remove do array Prontos
+                gest->Prontos = RemoverProntos(gest->Prontos, i, &gest->prontos_size);
             }
             if (RAM[i].instrucao[0] == 76) //EXECUTAR O L
             {
@@ -105,7 +112,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
         }
         else
         {
-          //  printf("Executadas 5 instruções, valor actual = %d\n", ProcessCB[indicePCB].variavel);
+            //  printf("Executadas 5 instruções, valor actual = %d\n", ProcessCB[indicePCB].variavel);
             return; //Ja executou o numero de instruções indicada
         }
     }
