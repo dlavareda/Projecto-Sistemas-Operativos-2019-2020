@@ -205,14 +205,14 @@ int main()
     Gestor *gest;
     int resp = 0;
     int PID;
-    while (resp != 5)
+    while (resp != 6)
     {
         printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
         printf("3 - Motrar readys\n");
         printf("4 - Motrar bloqueados\n");
-        printf("5 - Sair\n");
-
+        printf("5 - Anterior\n");
+        printf("6 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
         {
@@ -282,6 +282,80 @@ int main()
                 }
             }
         }
+        else if (resp == 2)
+        {
+
+            printf("Executando com o FCFS\n");
+            /////////////////////////////////////////////// leitura do control.txt  ///////////////////////////////////////////////
+            size_control = lerControl(controlo);
+            ///////////////////////////////////////////////     Leitura do Plano    ///////////////////////////////////////////////
+
+            //Faz a leitura do ficheiro plan.txt e adiciona a estrutura
+            plano_size = lerPlan(plano);
+
+            ////////////////////////////////////////     Inicialização do PCB    //////////////////////////////////////////////////
+
+            //inicializar PCB
+            inicializarPCB(ProcessCB, &PCB_size);
+
+            ////////////////////////     Carregamento dos Programas do plano para RAM do Plano    //////////////////////////////////
+
+            int novoProgramaSize = 0;
+            int startPrograma = 0;
+            Memory *novoPrograma;
+            int novoPCB = 0;
+            for (int i = 0; i < plano_size; i++)
+            {
+                startPrograma = (RAM_size);
+                novoPrograma = lerProcesso(plano[i].programa, &novoProgramaSize);
+                adicionarProgramaRAM(RAM, &RAM_size, novoPrograma, novoProgramaSize);
+                //Adiciona o programa recem carregado ao PCB
+                novoPCB = adicionarProcessoPCB(ProcessCB, &PCB_size, plano[i].programa, startPrograma, plano[i].tempo_chegada, novoProgramaSize);
+                free(novoPrograma);
+                novoProgramaSize = 0;
+            }
+
+            ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
+            gest = inicializarGestor(ProcessCB, PCB_size);
+
+            ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
+            ProcessCB = FCFS(ProcessCB, PCB_size);
+            //     mostrarPCB(ProcessCB, PCB_size);
+            /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
+            int len;
+            char linha[1];
+            char prompt[100];
+            while (linha[0] != 84)
+            {
+                printf("SGP: Introduza um comando>");
+                scanf("%s", linha);
+                if (linha[0] == 69) //Caso seja E
+                {
+                    printf("\nExecução E\n");
+                    executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
+                    //mostrarPCB(ProcessCB, PCB_size);
+                    mostrarProcessosBlocked(gest);
+                }
+                else if (linha[0] == 73) //Caso seja I
+                {
+                    printf("\nExecução I\n");
+                    //reutilização da operação B para bloquear o processo em execussao
+                    B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
+                    mostrarProcessosBlocked(gest);
+                }
+                else if (linha[0] == 82) //Caso seja R
+                {
+                }
+                else if (linha[0] == 84) //Caso seja T
+                {
+                }
+                else if (linha[0] == 68) //Caso seja D
+                {
+                    printf("\nExecução D\n");
+                    EscalonadorLPrazo(ProcessCB, PCB_size, gest);
+                }
+            }
+        }
         else if (resp == 3)
         {
             mostrarProcessosReady(gest);
@@ -290,7 +364,7 @@ int main()
         {
             mostrarProcessosBlocked(gest);
         }
-        else if (resp == 2)
+        else if (resp == 5)
         {
             resp = 0;
             while (resp != 9)
