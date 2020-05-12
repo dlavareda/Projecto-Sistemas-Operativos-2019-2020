@@ -62,6 +62,8 @@ typedef struct Gestor
     int prontos_size;
     int *Bloqueados; //array de inteiros com os PID dos processos bloqueados
     int bloqueados_size;
+    int *terminados; //array de inteiros com os PID dos processos terminados
+    int terminados_size;
 
 } Gestor;
 
@@ -168,7 +170,15 @@ void mostrarProcessosBlocked(Gestor *gest)
         printf("Processo %d Blocked\n", gest->Bloqueados[i]);
     }
 }
-
+//Função para listar processos terminados no gestor
+void mostrarProcessosTerminados(Gestor *gest)
+{
+    //Começa em 1 para ignorar o processo 0 escalonador
+    for (int i = 1; i < gest->terminados_size; i++)
+    {
+        printf("Processo %d Terminado\n", gest->terminados[i]);
+    }
+}
 void EscalonadorLPrazo(PCB *ProcessCB, int *PCB_size, Gestor *gest)
 {
     //tem de alterar o estado no PCB
@@ -205,13 +215,14 @@ int main()
     Gestor *gest;
     int resp = 0;
     int PID;
-    while (resp != 5)
+    while (resp != 6)
     {
         printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
-        printf("3 - Motrar readys\n");
-        printf("4 - Motrar bloqueados\n");
-        printf("5 - Sair\n");
+        printf("3 - Mostrar readys\n");
+        printf("4 - Mostrar bloqueados\n");
+        printf("5 - Mostrar bloqueados\n");
+        printf("6 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
         {
@@ -362,6 +373,10 @@ int main()
         else if (resp == 4)
         {
             mostrarProcessosBlocked(gest);
+        }
+        else if (resp == 5)
+        {
+            mostrarProcessosTerminados(gest);
         }
     }
     printf("Foram executadas %d operações\n", TIME);

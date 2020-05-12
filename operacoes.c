@@ -87,7 +87,19 @@ PCB *Remover(PCB X, PCB *L, int *N)
     }
     return L;
 }
-void T(PCB *ProcessCB, int *PCB_size, int PID)
+//função adaptada da UC Programação II
+int *RemoverProntos(int *L, int pos, int *N)
+{
+    int i;
+    for (i = pos; i < *N - 1; i++)
+    {
+        L[i] = L[i + 1];
+    }
+    *N = *N - 1;
+    L = (int *)realloc(L, (*N) * sizeof(int));
+    return L;
+}
+void T(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
 {
     //remover do PCB
     for (int i = 0; i < (*PCB_size); i++)
@@ -98,6 +110,17 @@ void T(PCB *ProcessCB, int *PCB_size, int PID)
             ProcessCB = Remover(ProcessCB[i], ProcessCB, PCB_size);
         }
     }
+    //remover do ready
+    int i = 0;
+    while (gest->Prontos[i] != PID)
+    { //encontra a posição no array prontos do PID
+        i++;
+    }
+    gest->Prontos = RemoverProntos(gest->Prontos, i, &gest->prontos_size);
+    //adicionar ao gest->teminados
+    gest->terminados_size++;
+    gest->terminados = realloc(gest->terminados, (gest->terminados_size * sizeof(int)));
+    gest->terminados[gest->terminados_size - 1] = PID;
 }
 void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RAM_size)
 {
@@ -119,18 +142,7 @@ void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RA
         }
     }
 }
-//função adaptada da UC Programação II
-int *RemoverProntos(int *L, int pos, int *N)
-{
-    int i;
-    for (i = pos; i < *N - 1; i++)
-    {
-        L[i] = L[i + 1];
-    }
-    *N = *N - 1;
-    L = (int *)realloc(L, (*N) * sizeof(int));
-    return L;
-}
+
 //função adaptada da UC Programação II
 int *RemoverBloqueados(int *L, int pos, int *N)
 {
@@ -164,5 +176,4 @@ void B(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
     gest->bloqueados_size++;
     gest->Bloqueados = (int *)realloc(gest->Bloqueados, gest->bloqueados_size * sizeof(int));
     gest->Bloqueados[gest->bloqueados_size - 1] = PID;
-
 }

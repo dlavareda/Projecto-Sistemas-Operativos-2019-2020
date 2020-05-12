@@ -9,6 +9,8 @@ Gestor *inicializarGestor(PCB *PCBtabela, int PCB_size)
     gest->PC = 0;
     gest->PCBtabela = PCBtabela;
     gest->Prontos = malloc(PCB_size * sizeof(int));
+    gest->terminados_size = 0;
+    gest->terminados = malloc(0);
     for (int i = 0; i < PCB_size; i++)
     {
         gest->Prontos[i] = PCBtabela[i].PID;
@@ -85,14 +87,14 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
                 (*TIME)++;
                 ProcessCB[indicePCB].PC++;
                 ProcessCB[indicePCB].tempo_cpu++;
-                T(ProcessCB, PCB_size, PID);
-                int i = 0;
+                T(ProcessCB, PCB_size, PID, gest);
+             /*   int i = 0;
                 while (gest->Prontos[i] != PID)
                 { //encontra a posição no array prontos do PID
                     i++;
                 }
                 //remove do array Prontos
-                gest->Prontos = RemoverProntos(gest->Prontos, i, &gest->prontos_size);
+                gest->Prontos = RemoverProntos(gest->Prontos, i, &gest->prontos_size);*/
             }
             if (RAM[i].instrucao[0] == 76) //EXECUTAR O L
             {
