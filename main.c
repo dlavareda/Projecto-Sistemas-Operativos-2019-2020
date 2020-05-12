@@ -64,7 +64,6 @@ typedef struct Gestor
     int bloqueados_size;
     int *terminados; //array de inteiros com os PID dos processos terminados
     int terminados_size;
-
 } Gestor;
 
 #include "ficheiros.c"
@@ -271,14 +270,14 @@ int main()
                     printf("\nExecução E\n");
                     executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
                     //mostrarPCB(ProcessCB, PCB_size);
-                    mostrarProcessosBlocked(gest);
+                    //mostrarProcessosBlocked(gest);
                 }
                 else if (controlo[i].programa[0] == 73) //Caso seja I
                 {
                     printf("\nExecução I\n");
                     //reutilização da operação B para bloquear o processo em execussao
                     B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
-                    mostrarProcessosBlocked(gest);
+                    //mostrarProcessosBlocked(gest);
                 }
                 else if (controlo[i].programa[0] == 82) //Caso seja R
                 {
