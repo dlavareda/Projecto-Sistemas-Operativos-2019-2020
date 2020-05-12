@@ -173,6 +173,7 @@ void mostrarProcessosBlocked(Gestor *gest)
 //Função para listar processos terminados no gestor
 void mostrarProcessosTerminados(Gestor *gest)
 {
+
     //Começa em 1 para ignorar o processo 0 escalonador
     for (int i = 1; i < gest->terminados_size; i++)
     {
@@ -221,7 +222,7 @@ int main()
         printf("2 - Debugging\n");
         printf("3 - Mostrar readys\n");
         printf("4 - Mostrar bloqueados\n");
-        printf("5 - Mostrar bloqueados\n");
+        printf("5 - Mostrar terminados\n");
         printf("6 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
