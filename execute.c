@@ -51,7 +51,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
             //Nao executar um processo bloqueado
             if (ProcessCB[indicePCB].estado == 2)
             {
-                printf("Nao pode executar um processo bloqueado\n");
+                //printf("Nao pode executar um processo bloqueado\n");
                 return;
             }
             if (RAM[i].instrucao[0] == 77) //EXECUTAR O M
@@ -80,7 +80,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
                 (*TIME)++;
                 ProcessCB[indicePCB].PC++;
                 ProcessCB[indicePCB].tempo_cpu++;
-                C(ProcessCB, PCB_size, PID, (RAM[i].valor - 1)); //valor -1 pois um ja foi incrementado acima
+                C(ProcessCB, PCB_size, PID, (RAM[i].valor - 1), gest); //valor -1 pois um ja foi incrementado acima
             }
             if (RAM[i].instrucao[0] == 84) //EXECUTAR O T
             {
@@ -101,7 +101,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
                 (*TIME)++;
                 ProcessCB[indicePCB].PC++;
                 ProcessCB[indicePCB].tempo_cpu++;
-                L(ProcessCB, PCB_size, PID, RAM[i].nome, RAM, RAM_size);
+                L(ProcessCB, PCB_size, PID, RAM[i].nome, RAM, RAM_size, *TIME, gest);
             }
             if (RAM[i].instrucao[0] == 66) //EXECUTAR O B
             {

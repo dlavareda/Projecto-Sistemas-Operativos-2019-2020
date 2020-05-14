@@ -32,7 +32,7 @@ void S(PCB *ProcessCB, int PCB_size, int PID, int valor)
     }
 }
 
-void C(PCB *ProcessCB, int *PCB_size, int PID, int valor)
+void C(PCB *ProcessCB, int *PCB_size, int PID, int valor, Gestor *gest)
 {
 
     int novoPCB = -1;
@@ -54,6 +54,10 @@ void C(PCB *ProcessCB, int *PCB_size, int PID, int valor)
             //ProcessCB[novoPCB].tempo_chegada //terá de ser o momento atual
             //aumentar valor no PCB do pai
             ProcessCB[i].PC += valor;
+            //adiciona ao ready
+            gest->prontos_size++;
+            gest->Prontos = realloc(gest->Prontos, (gest->prontos_size * sizeof(int)));
+            gest->Prontos[gest->prontos_size - 1] = ProcessCB[novoPCB].PID;
         }
     }
 }
@@ -106,7 +110,7 @@ void T(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
     {
         if (ProcessCB[i].PID == PID) //encontra o elemento
         {
-            printf("PID %d terminou a execussão valor = %d", PID, ProcessCB[i].variavel);
+            printf("PID %d - %s terminou a execussão valor = %d", PID,ProcessCB[i].nome_processo, ProcessCB[i].variavel);
             ProcessCB = Remover(ProcessCB[i], ProcessCB, PCB_size);
         }
     }
@@ -122,13 +126,12 @@ void T(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
     gest->terminados = realloc(gest->terminados, (gest->terminados_size * sizeof(int)));
     gest->terminados[gest->terminados_size - 1] = PID;
 }
-void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RAM_size)
+void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RAM_size, int tempoactual, Gestor *gest)
 {
     for (int i = 0; i < (*PCB_size); i++)
     {
         if (ProcessCB[i].PID == PID) //encontra o elemento
         {
-            int tempoactual = 10; // futuramente variavel global sobre qual o tempo atual
             int novoProgramaSize = 0;
             Memory *novoPrograma;
             int startPrograma = (*RAM_size);
@@ -138,7 +141,13 @@ void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RA
             int novoPCB = adicionarProcessoPCB(ProcessCB, PCB_size, filho, startPrograma, tempoactual, novoProgramaSize);
             ProcessCB[novoPCB].PPID = ProcessCB[i].PID;
             ProcessCB[novoPCB].PC = 0;
+            //adiciona ao ready
+            gest->prontos_size++;
+            gest->Prontos = realloc(gest->Prontos, (gest->prontos_size * sizeof(int)));
+            gest->Prontos[gest->prontos_size - 1] = ProcessCB[novoPCB].PID;
             free(novoPrograma);
+            T(ProcessCB, PCB_size, PID, gest);
+            (*PCB_size)++;
         }
     }
 }

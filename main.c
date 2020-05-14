@@ -219,9 +219,9 @@ int main()
     {
         printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
-        printf("3 - Mostrar readys\n");
-        printf("4 - Mostrar bloqueados\n");
-        printf("5 - Mostrar terminados\n");
+        //printf("3 - Mostrar readys\n");
+       // printf("4 - Mostrar bloqueados\n");
+       // printf("5 - Mostrar terminados\n");
         printf("6 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
@@ -265,6 +265,8 @@ int main()
             /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
             for (int i = 0; i < size_control; i++)
             {
+                            mostrarPCB(ProcessCB,PCB_size);
+
                 if (controlo[i].programa[0] == 69) //Caso seja E
                 {
                     printf("\nExecução E\n");
