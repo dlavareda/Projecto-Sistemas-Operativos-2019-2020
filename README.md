@@ -21,3 +21,5 @@ Program is compiled with the name "main" and the various files for its execution
 ```bash
 ./main
 ```
+## NOTE
+The "1st attempt" folder was out 1st approach to the problem that turned out to be an inadequate one. So we decided to keep the files in a seperate folder to show the teachers the work that has been done in the implementation of this project other than only the final version.
