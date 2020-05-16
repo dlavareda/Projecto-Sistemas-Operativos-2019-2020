@@ -17,19 +17,20 @@
 #define MagentaClaro "\x1b[95m"
 #define CianoClaro "\x1b[96m"
 //Definição da estrutura PCB
-typedef struct PCB
+typedef struct PCB  //process control block
 {
     char nome_processo[15];
-    int start;
-    int variavel;
-    int PC;
-    int PID;
-    int PPID;
+    int start; // posição na ram onde começa este programa
+    int variavel; //o que o programa vai alterar na variável
+    int PC; // ultima instrução que foi executada deste programa 
+    int PID; // é geraddo quando se carrega
+    int PPID; // do pai caso tenha filhos
     int prioridade;
-    int estado;
-    int tempo_chegada;
-    int tempo_burst;
-    int tempo_cpu;
+    int estado; // 1 - pronto 2 - bloqueado 
+    int tempo_chegada; //quando chega 
+    int tempo_burst; //tamanho do programa, um programa que tem 10 introções ou 5 instruções etc
+    int tempo_cpu; // quando estou a excetutar o programa, a cada instrução que ele executa ele acrescenta aqui o valor (tempo que o processo já gastou de cpu)
+    //numero de intruções que ele já gastou ao cpu
 } PCB;
 
 //Definição da estrutura memoria
@@ -40,14 +41,14 @@ typedef struct Memory
     char nome[15];
 } Memory;
 
-typedef struct plan
+typedef struct plan //ler o ficheiro.plan
 {
     char programa[15];
     int tempo_chegada;
 } plan;
 
-//definição da estrutura control
-typedef struct control
+//definição da estrutura control    //ler o controlo
+typedef struct control 
 {
     char programa[1];
 } control;
@@ -70,6 +71,7 @@ typedef struct Gestor
 #include "operacoes.c"
 #include "execute.c"
 #include "escalonadores.c"
+#include "Report.c"
 #define TIME_QUANTUN 5
 
 //Função para ler novo processo
@@ -219,9 +221,9 @@ int main()
     {
         printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
-        //printf("3 - Mostrar readys\n");
-        // printf("4 - Mostrar bloqueados\n");
-        // printf("5 - Mostrar terminados\n");
+        printf("3 - Mostrar readys\n");
+        printf("4 - Mostrar bloqueados\n");
+        printf("5 - Mostrar terminados\n");
         printf("6 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
@@ -265,13 +267,10 @@ int main()
             /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
             for (int i = 0; i < size_control; i++)
             {
-                mostrarPCB(ProcessCB, PCB_size);
-
                 if (controlo[i].programa[0] == 69) //Caso seja E
                 {
                     printf("\nExecução E\n");
                     executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
-                    gest->RunningState = PID;
                     //mostrarPCB(ProcessCB, PCB_size);
                     //mostrarProcessosBlocked(gest);
                 }
@@ -280,11 +279,11 @@ int main()
                     printf("\nExecução I\n");
                     //reutilização da operação B para bloquear o processo em execussao
                     B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
-                    gest->RunningState = 0;
                     //mostrarProcessosBlocked(gest);
                 }
                 else if (controlo[i].programa[0] == 82) //Caso seja R
                 {
+                    R(TIME, ProcessCB, PCB_size, gest);
                 }
                 else if (controlo[i].programa[0] == 84) //Caso seja T
                 {
@@ -293,7 +292,6 @@ int main()
                 {
                     printf("\nExecução D\n");
                     EscalonadorLPrazo(ProcessCB, PCB_size, gest);
-                    gest->RunningState = 0;
                 }
             }
         }
@@ -359,7 +357,8 @@ int main()
                     mostrarProcessosBlocked(gest);
                 }
                 else if (linha[0] == 82) //Caso seja R
-                {
+                {                 
+                   R(TIME, ProcessCB, PCB_size, gest);
                 }
                 else if (linha[0] == 84) //Caso seja T
                 {
