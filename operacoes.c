@@ -110,8 +110,9 @@ void T(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
     {
         if (ProcessCB[i].PID == PID) //encontra o elemento
         {
-            printf("PID %d - %s terminou a execussão valor = %d", PID,ProcessCB[i].nome_processo, ProcessCB[i].variavel);
-            ProcessCB = Remover(ProcessCB[i], ProcessCB, PCB_size);
+            printf("PID %d - %s terminou a execussão valor = %d", PID, ProcessCB[i].nome_processo, ProcessCB[i].variavel);
+            //ProcessCB = Remover(ProcessCB[i], ProcessCB, PCB_size);
+            ProcessCB[i].estado = -1; //-1 = TERMINADO
         }
     }
     //remover do ready
@@ -125,6 +126,7 @@ void T(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
     gest->terminados_size++;
     gest->terminados = realloc(gest->terminados, (gest->terminados_size * sizeof(int)));
     gest->terminados[gest->terminados_size - 1] = PID;
+    gest->RunningState = 0;
 }
 void L(PCB *ProcessCB, int *PCB_size, int PID, char *filho, Memory *RAM, int *RAM_size, int tempoactual, Gestor *gest)
 {
@@ -172,6 +174,7 @@ void B(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
         if (ProcessCB[i].PID == PID) //encontra o elemento
         {
             ProcessCB[i].estado = 2; //1 pronto, 2 bloqueado
+            printf("Processo bloqueado\n");
         }
     }
     int i = 0;

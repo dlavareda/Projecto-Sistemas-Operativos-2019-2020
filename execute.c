@@ -16,7 +16,6 @@ Gestor *inicializarGestor(PCB *PCBtabela, int PCB_size)
         gest->Prontos[i] = PCBtabela[i].PID;
         gest->prontos_size++;
     }
-
     return gest;
 }
 //Função para executar o programa
@@ -48,10 +47,9 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
     {
         if (i < (start + N_instrucoes))
         {
-            //Nao executar um processo bloqueado
-            if (ProcessCB[indicePCB].estado == 2)
+            //Nao executar um processo bloqueado ou terminado
+            if (ProcessCB[indicePCB].estado == 2 || ProcessCB[indicePCB].estado == -1)
             {
-                //printf("Nao pode executar um processo bloqueado\n");
                 return;
             }
             if (RAM[i].instrucao[0] == 77) //EXECUTAR O M
@@ -88,13 +86,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
                 ProcessCB[indicePCB].PC++;
                 ProcessCB[indicePCB].tempo_cpu++;
                 T(ProcessCB, PCB_size, PID, gest);
-             /*   int i = 0;
-                while (gest->Prontos[i] != PID)
-                { //encontra a posição no array prontos do PID
-                    i++;
-                }
-                //remove do array Prontos
-                gest->Prontos = RemoverProntos(gest->Prontos, i, &gest->prontos_size);*/
+                gest->RunningState = 0;
             }
             if (RAM[i].instrucao[0] == 76) //EXECUTAR O L
             {

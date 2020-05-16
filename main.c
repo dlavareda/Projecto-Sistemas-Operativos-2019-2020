@@ -1,3 +1,9 @@
+/*
+TODO
+nao está a executar processos que vem do L
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,19 +23,19 @@
 #define MagentaClaro "\x1b[95m"
 #define CianoClaro "\x1b[96m"
 //Definição da estrutura PCB
-typedef struct PCB  //process control block
+typedef struct PCB //process control block
 {
     char nome_processo[15];
-    int start; // posição na ram onde começa este programa
+    int start;    // posição na ram onde começa este programa
     int variavel; //o que o programa vai alterar na variável
-    int PC; // ultima instrução que foi executada deste programa 
-    int PID; // é geraddo quando se carrega
-    int PPID; // do pai caso tenha filhos
+    int PC;       // ultima instrução que foi executada deste programa
+    int PID;      // é geraddo quando se carrega
+    int PPID;     // do pai caso tenha filhos
     int prioridade;
-    int estado; // 1 - pronto 2 - bloqueado 
-    int tempo_chegada; //quando chega 
-    int tempo_burst; //tamanho do programa, um programa que tem 10 introções ou 5 instruções etc
-    int tempo_cpu; // quando estou a excetutar o programa, a cada instrução que ele executa ele acrescenta aqui o valor (tempo que o processo já gastou de cpu)
+    int estado;        // 1 - pronto 2 - bloqueado
+    int tempo_chegada; //quando chega
+    int tempo_burst;   //tamanho do programa, um programa que tem 10 introções ou 5 instruções etc
+    int tempo_cpu;     // quando estou a excetutar o programa, a cada instrução que ele executa ele acrescenta aqui o valor (tempo que o processo já gastou de cpu)
     //numero de intruções que ele já gastou ao cpu
 } PCB;
 
@@ -48,7 +54,7 @@ typedef struct plan //ler o ficheiro.plan
 } plan;
 
 //definição da estrutura control    //ler o controlo
-typedef struct control 
+typedef struct control
 {
     char programa[1];
 } control;
@@ -137,12 +143,21 @@ void inicializarPCB(PCB *ProcessCB, int *PCB_size)
 }
 int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria, int tempo_chegada, int tempo_burst)
 {
+    int PID_max = 0;
+    for (int j = 1; j < (*PCB_size); j++)
+    {
+        if (ProcessCB[j].PID > PID_max)
+        {
+            PID_max = ProcessCB[j].PID;
+        }
+    }
+
     int i = (*PCB_size);
     strcpy(ProcessCB[i].nome_processo, nome);
     ProcessCB[i].start = primeiroElementoMemoria;
     ProcessCB[i].variavel = 0;
     ProcessCB[i].PC = 0;
-    ProcessCB[i].PID = (ProcessCB[i - 1].PID) + 1;
+    ProcessCB[i].PID = PID_max + 1;
     ProcessCB[i].PPID = 0;
     ProcessCB[i].prioridade = 0;
     ProcessCB[i].estado = 1;
@@ -186,7 +201,10 @@ void EscalonadorLPrazo(PCB *ProcessCB, int *PCB_size, Gestor *gest)
     //tem de alterar o estado no PCB
     for (int i = 0; i < PCB_size; i++)
     {
-        ProcessCB[i].estado = 1; //1 pronto, 2 bloqueado
+        if (ProcessCB[i].estado == 2)
+        {
+            ProcessCB[i].estado = 1; //1 pronto, 2 bloqueado
+        }
     }
 
     for (int i = 0; i < gest->bloqueados_size; i++)
@@ -269,17 +287,23 @@ int main()
             {
                 if (controlo[i].programa[0] == 69) //Caso seja E
                 {
-                    printf("\nExecução E\n");
-                    executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
-                    //mostrarPCB(ProcessCB, PCB_size);
-                    //mostrarProcessosBlocked(gest);
+                    for (int i = 1; i < PCB_size; i++)
+                    {
+                        if (ProcessCB[i].estado == 1) //encontra o primeiro no estado 1
+                        {
+                            gest->RunningState = ProcessCB[i].PID;
+                            printf("\nExecução E\n");
+                            executarPrograma(RAM, &RAM_size, ProcessCB[i].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
+                            break;
+                        }
+                    }
                 }
                 else if (controlo[i].programa[0] == 73) //Caso seja I
                 {
                     printf("\nExecução I\n");
                     //reutilização da operação B para bloquear o processo em execussao
-                    B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
-                    //mostrarProcessosBlocked(gest);
+                    B(ProcessCB, &PCB_size, gest->RunningState, gest);
+                    gest->RunningState = 0;
                 }
                 else if (controlo[i].programa[0] == 82) //Caso seja R
                 {
@@ -292,6 +316,7 @@ int main()
                 {
                     printf("\nExecução D\n");
                     EscalonadorLPrazo(ProcessCB, PCB_size, gest);
+                    gest->RunningState = 0;
                 }
             }
         }
@@ -344,21 +369,29 @@ int main()
                 scanf("%s", linha);
                 if (linha[0] == 69) //Caso seja E
                 {
-                    printf("\nExecução E\n");
-                    executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
-                    //mostrarPCB(ProcessCB, PCB_size);
-                    mostrarProcessosBlocked(gest);
+                    for (int i = 1; i < PCB_size; i++)
+                    {
+                        if (ProcessCB[i].estado == 1) //encontra o primeiro no estado 1
+                        {
+                            gest->RunningState = ProcessCB[i].PID;
+                            printf("\nExecução E\n");
+                            executarPrograma(RAM, &RAM_size, ProcessCB[i].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
+                            break;
+                        }
+                    }
                 }
                 else if (linha[0] == 73) //Caso seja I
                 {
                     printf("\nExecução I\n");
                     //reutilização da operação B para bloquear o processo em execussao
+                    gest->RunningState = 0;
                     B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
-                    mostrarProcessosBlocked(gest);
+
+                    //mostrarProcessosBlocked(gest);
                 }
                 else if (linha[0] == 82) //Caso seja R
-                {                 
-                   R(TIME, ProcessCB, PCB_size, gest);
+                {
+                    R(TIME, ProcessCB, PCB_size, gest);
                 }
                 else if (linha[0] == 84) //Caso seja T
                 {
@@ -367,6 +400,7 @@ int main()
                 {
                     printf("\nExecução D\n");
                     EscalonadorLPrazo(ProcessCB, PCB_size, gest);
+                    gest->RunningState = 0;
                 }
             }
         }
