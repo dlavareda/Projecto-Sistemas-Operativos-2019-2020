@@ -220,8 +220,8 @@ int main()
         printf("1 - Executar CONTROL.TXT\n");
         printf("2 - Debugging\n");
         //printf("3 - Mostrar readys\n");
-       // printf("4 - Mostrar bloqueados\n");
-       // printf("5 - Mostrar terminados\n");
+        // printf("4 - Mostrar bloqueados\n");
+        // printf("5 - Mostrar terminados\n");
         printf("6 - Sair\n");
         scanf("%d", &resp);
         if (resp == 1)
@@ -265,12 +265,13 @@ int main()
             /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
             for (int i = 0; i < size_control; i++)
             {
-                            mostrarPCB(ProcessCB,PCB_size);
+                mostrarPCB(ProcessCB, PCB_size);
 
                 if (controlo[i].programa[0] == 69) //Caso seja E
                 {
                     printf("\nExecução E\n");
                     executarPrograma(RAM, &RAM_size, ProcessCB[1].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
+                    gest->RunningState = PID;
                     //mostrarPCB(ProcessCB, PCB_size);
                     //mostrarProcessosBlocked(gest);
                 }
@@ -279,6 +280,7 @@ int main()
                     printf("\nExecução I\n");
                     //reutilização da operação B para bloquear o processo em execussao
                     B(ProcessCB, &PCB_size, ProcessCB[1].PID, gest);
+                    gest->RunningState = 0;
                     //mostrarProcessosBlocked(gest);
                 }
                 else if (controlo[i].programa[0] == 82) //Caso seja R
@@ -291,6 +293,7 @@ int main()
                 {
                     printf("\nExecução D\n");
                     EscalonadorLPrazo(ProcessCB, PCB_size, gest);
+                    gest->RunningState = 0;
                 }
             }
         }
