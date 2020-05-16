@@ -29,6 +29,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
 
         if (ProcessCB[i].PID == PID)
         {
+
             start = ProcessCB[i].start + ProcessCB[i].PC; //retomar execussão anteriormente parada
             indicePCB = i;
         }
@@ -38,13 +39,18 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
         }
     }
     //para o caso de ser o ultimo processo em memoria
-    if (end == -1)
+    if (end < 0)
     {
         end = *RAM_size;
     }
     //start += ProcessCB[indicePCB].PC;
+    if (PID == 3)
+    {
+        printf("agora");
+    }
     for (int i = start; i <= end; i++)
     {
+
         if (i < (start + N_instrucoes))
         {
             //Nao executar um processo bloqueado ou terminado
@@ -52,6 +58,7 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
             {
                 return;
             }
+
             if (RAM[i].instrucao[0] == 77) //EXECUTAR O M
             {
                 (*TIME)++;

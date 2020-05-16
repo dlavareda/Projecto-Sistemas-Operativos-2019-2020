@@ -3,12 +3,11 @@ void R(int TIME, PCB *ProcessCB, int PCB_size, Gestor *gest)
 { //onde vou buscar os processos em execução
 
     printf("TEMPO ATUAL: %d\n", TIME);
-
+    printf("%s- PROCESSO EM EXECUÇÃO:%s\n", Azul, Normal);
     for (int i = 0; i < PCB_size; i++)
     {
-        if (gest->RunningState == ProcessCB[i].PID && ProcessCB[i].estado == 1)
+        if (gest->RunningState == ProcessCB[i].PID && ProcessCB[i].estado == 1 && gest->RunningState != 0)
         { //verificar o processo em execução
-            printf("%s- PROCESSO EM EXECUÇÃO:%s\n", Azul, Normal);
             printf("Nome do processo: %s\n", ProcessCB[i].nome_processo);
             printf("PID: %d\n", ProcessCB[i].PID);
             printf("PPID: %d\n", ProcessCB[i].PPID);

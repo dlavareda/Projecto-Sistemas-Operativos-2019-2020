@@ -110,7 +110,7 @@ void T(PCB *ProcessCB, int *PCB_size, int PID, Gestor *gest)
     {
         if (ProcessCB[i].PID == PID) //encontra o elemento
         {
-            printf("PID %d - %s terminou a execussão valor = %d", PID, ProcessCB[i].nome_processo, ProcessCB[i].variavel);
+            printf("%sPID %d - %s terminou a execussão valor = %d%s\n",Magenta, PID, ProcessCB[i].nome_processo, ProcessCB[i].variavel,Normal);
             //ProcessCB = Remover(ProcessCB[i], ProcessCB, PCB_size);
             ProcessCB[i].estado = -1; //-1 = TERMINADO
         }

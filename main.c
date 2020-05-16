@@ -1,9 +1,3 @@
-/*
-TODO
-nao está a executar processos que vem do L
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -287,10 +281,12 @@ int main()
             {
                 if (controlo[i].programa[0] == 69) //Caso seja E
                 {
+
                     for (int i = 1; i < PCB_size; i++)
                     {
                         if (ProcessCB[i].estado == 1) //encontra o primeiro no estado 1
                         {
+
                             gest->RunningState = ProcessCB[i].PID;
                             printf("\nExecução E\n");
                             executarPrograma(RAM, &RAM_size, ProcessCB[i].PID, ProcessCB, &PCB_size, &TIME, gest, TIME_QUANTUN);
