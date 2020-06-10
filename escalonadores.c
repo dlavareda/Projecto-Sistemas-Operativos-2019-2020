@@ -48,12 +48,16 @@ PCB *FCFS(PCB *arr_processos, int arr_processos_size) //First Come First Served
                 ordenado[w].tempo_chegada = arr_processos[i].tempo_chegada;
                 ordenado[w].tempo_burst = arr_processos[i].tempo_burst;
                 ordenado[w].tempo_cpu = arr_processos[i].tempo_cpu;
-                //barraProgressoAdicionarElemento(arr_processos[i].PID, obterCor(arr_processos[i].PID));
-                // printf("%s->", Normal);
                 w++;
             }
         }
         actual++;
+    }
+    //percorrer o arr_tmp e chamar os prints
+    for (int p = 0; p < w; p++)
+    {
+        barraProgressoAdicionarElemento(ordenado[p].PID, obterCor(ordenado[p].PID));
+        printf("%s->", Normal);
     }
     //printf("%s[Fim da Execussão]\n", Normal);
     return ordenado;
@@ -97,7 +101,7 @@ void bubbleSort(PCB *arr, int n)
 PCB *SJF(PCB *arr_processos, int arr_processos_size) //Shortest-Job-First Não Preemptivo
 {
 
-    //printf("Linha de execussão dos processos usando o algoritmo de escalonamento Shortest-Job-First (Não Preemptivo)\n");
+    printf("Linha de execussão dos processos usando o algoritmo de escalonamento Shortest-Job-First (Não Preemptivo)\n");
     PCB *ordenado = malloc(arr_processos_size * sizeof(PCB));
     //para nao mexer no PID 0 Escalonador
     strcpy(ordenado[0].nome_processo, arr_processos[0].nome_processo);
@@ -143,6 +147,5 @@ PCB *SJF(PCB *arr_processos, int arr_processos_size) //Shortest-Job-First Não P
         barraProgressoAdicionarElemento(ordenado[p].PID, obterCor(ordenado[p].PID));
         printf("%s->", Normal);
     }
-    // printf("%s[Fim da Execussão]\n", Normal);
     return ordenado;
 }

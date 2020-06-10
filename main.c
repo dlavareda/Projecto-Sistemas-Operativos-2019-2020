@@ -237,7 +237,11 @@ int main()
         scanf("%d", &resp);
         if (resp == 1)
         {
-            printf("Executando com o FCFS\n");
+            printf("Qual o algoritmo de escalonamento?\n 1 - FCFS\n 2 - SFF\n");
+            int respalgoritmo = 0;
+            scanf("%d", &respalgoritmo);
+
+            //printf("Executando com o FCFS\n");
             /////////////////////////////////////////////// leitura do control.txt  ///////////////////////////////////////////////
             size_control = lerControl(controlo);
             ///////////////////////////////////////////////     Leitura do Plano    ///////////////////////////////////////////////
@@ -270,9 +274,22 @@ int main()
             ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
             gest = inicializarGestor(ProcessCB, PCB_size);
 
-            ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
-            ProcessCB = FCFS(ProcessCB, PCB_size);
-            //     mostrarPCB(ProcessCB, PCB_size);
+            if (respalgoritmo == 1)
+            {
+                ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
+                ProcessCB = FCFS(ProcessCB, PCB_size);
+            }
+            else if (respalgoritmo == 2)
+            {
+                ////////////////////////////////////////  Executa o SJF ////////////////////////////////////////
+                ProcessCB = SJF(ProcessCB, PCB_size);
+            }
+            else
+            {
+                printf("Algoritmo de escalonamento inválido\n");
+                return;
+            }
+
             /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
             for (int i = 0; i < size_control; i++)
             {
@@ -315,8 +332,10 @@ int main()
         }
         else if (resp == 2)
         {
-
-            printf("Executando com o FCFS\n");
+            printf("Qual o algoritmo de escalonamento?\n 1 - FCFS\n 2 - SFF\n");
+            int respalgoritmo = 0;
+            scanf("%d", &respalgoritmo);
+           // printf("Executando com o FCFS\n");
             /////////////////////////////////////////////// leitura do control.txt  ///////////////////////////////////////////////
             size_control = lerControl(controlo);
             ///////////////////////////////////////////////     Leitura do Plano    ///////////////////////////////////////////////
@@ -349,9 +368,21 @@ int main()
             ////////////////////////////////////////     Inicialização do Gestor    //////////////////////////////////////////////////
             gest = inicializarGestor(ProcessCB, PCB_size);
 
-            ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
-            ProcessCB = FCFS(ProcessCB, PCB_size);
-            //     mostrarPCB(ProcessCB, PCB_size);
+            if (respalgoritmo == 1)
+            {
+                ////////////////////////////////////////  Executa o FCFS ////////////////////////////////////////
+                ProcessCB = FCFS(ProcessCB, PCB_size);
+            }
+            else if (respalgoritmo == 2)
+            {
+                ////////////////////////////////////////  Executa o SJF ////////////////////////////////////////
+                ProcessCB = SJF(ProcessCB, PCB_size);
+            }
+            else
+            {
+                printf("Algoritmo de escalonamento inválido\n");
+                return;
+            }
             /////////////////////////////////////// Inicio da execussao ///////////////////////////////////////
             int len;
             char linha[1];
@@ -397,7 +428,7 @@ int main()
                 }
             }
         }
-       /* else if (resp == 3)
+        /* else if (resp == 3)
         {
             mostrarProcessosReady(gest);
         }

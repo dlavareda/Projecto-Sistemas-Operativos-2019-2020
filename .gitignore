@@ -10,3 +10,4 @@ LerFicheiros.o
 escalonadores.o
 .~lock.relatorio1.odt#
 antigomain.c
+testeSO.c
