@@ -4,6 +4,11 @@
 #include <unistd.h>
 #include <errno.h>
 
+#define Normal "\x1B[0m"
+#define Vermelho "\x1B[31m"
+#define Verde "\x1B[32m"
+#define Amarelo "\x1B[33m"
+
 typedef struct MEMORIA
 {
     int PID;
@@ -11,7 +16,6 @@ typedef struct MEMORIA
     char valor2; //dado2
     struct MEMORIA *nseg;
 } Memoria;
-
 
 Memoria *makenode()
 {
@@ -67,8 +71,9 @@ Memoria *initialize_mem(Memoria *RAM, int *sinal)
         return RAM;
     }
 }
-Memoria *firstFit(Memoria *RAM, int *count)
+/*Memoria *firstFit(Memoria *RAM, int *count, int num_units)
 {
+    int size_available = 0;
     while (RAM->nseg != NULL)
     {
         if (RAM->PID != NULL)
@@ -77,34 +82,51 @@ Memoria *firstFit(Memoria *RAM, int *count)
         }
         else
         {
-            return RAM;
+            while (RAM->nseg != NULL)
+            {
+                if (RAM->PID == NULL)
+                {
+                    size_available++;
+                    RAM = RAM->nseg;
+                    (*count)++;
+                    if (size_available == num_units)
+                    {
+                        return RAM;
+                    }
+                    else
+                    {
+                        size_available = 0;
+                        continue;
+                    }
+                }
+            }
         }
         (*count)++;
     }
     return RAM;
-}
-int alocate_mem(Memoria *RAM, int process_id, int num_units)
+}*/
+/*int alocate_mem(Memoria *RAM, int process_id, int num_units)
 {
     int count = 0;
     int alocado = 0;
-    RAM = firstFit(RAM, &count);
-    if (RAM == NULL)
+    Memoria *aux = firstFit(RAM, &count, num_units);
+    if (aux == NULL)
     {
         return -1;
     }
 
     for (int i = 0; i < num_units; i++)
     {
-        if (RAM == NULL)
+        if (aux == NULL)
         {
             return -1;
         }
-        else if (RAM->PID != NULL)
+        else if (aux->PID != NULL && aux->PID != process_id)
         {
             return -1;
         }
-        RAM->PID = process_id;
-        RAM = RAM->nseg;
+        aux->PID = process_id;
+        aux = aux->nseg;
         count++;
         alocado++;
     }
@@ -116,8 +138,60 @@ int alocate_mem(Memoria *RAM, int process_id, int num_units)
     {
         return -1;
     }
+}*/
+
+Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
+{
+    Memoria *start = RAM;
+    Memoria *aux = NULL;
+    int size_available = 0;
+    while (RAM->nseg != NULL)
+    {
+        if (RAM->PID != NULL)
+        {
+            size_available = 0;
+            (*count)++;
+            RAM = RAM->nseg;
+        }
+        else
+        {
+            if (size_available == 0) //primeiro elemento da sequencia actual
+            {
+                aux = RAM;
+            }
+            size_available++;
+            (*count)++;
+            RAM = RAM->nseg;
+            if (size_available == num_units)
+            {
+                for (int i = 0; i < num_units; i++)
+                {
+                    aux->PID = process_id;
+                    aux = aux->nseg;
+                }
+                return start;
+            }
+        }
+    }
+    //Se chegar aqui retorna NULL
+    return NULL;
 }
-Memoria *deallocate_mem(Memoria *RAM, int process_id, int *status)
+
+int alocate_mem(Memoria *RAM, int process_id, int num_units)
+{
+    int count = 0;
+    RAM = firstFit(RAM, process_id, num_units, &count);
+    if (RAM == NULL)
+    {
+        return -1;
+    }
+    else
+    {
+        return count;
+    }
+}
+
+Memoria *deallocate_mem(Memoria *RAM, int process_id, int *status, int *size)
 {
     (*status) = -1;
     Memoria *AUX = RAM;
@@ -129,6 +203,7 @@ Memoria *deallocate_mem(Memoria *RAM, int process_id, int *status)
             RAM->valor = NULL;
             RAM->valor2 = NULL;
             (*status) = 1;
+            (*size)++;
         }
         RAM = RAM->nseg;
     }
@@ -191,7 +266,10 @@ int findPID(int PID[], int qntsimulacao, int valor)
 }
 int main()
 {
+    float percent = 0;
+    int RAMOcupada = 0;
     int qntsimulacao = 0;
+    int size = 0;
     Memoria *RAM = NULL;
     int status = 0;
     RAM = initialize_mem(RAM, &status);
@@ -202,7 +280,7 @@ int main()
     printf("Qual a quantidade de pedidos de memoria deseja simular?\n");
     scanf("%d", &qntsimulacao);
     printf("Inicio da simulação de %d pedidos de memoria usando o first-fit\n", qntsimulacao);
-    int lowerQNT = 3, upperQNT = 10, qnt = 0, resp = 0, pid = 0, lowerPID = 1, upperPID = 20000;
+    int lowerQNT = 3, upperQNT = 10, qnt = 0, resp = 0, pid = 0, lowerPID = 1, upperPID = qntsimulacao;
     int *PID = malloc(qntsimulacao * sizeof(int));
     int pidcount = 0;
     for (int i = 0; i < qntsimulacao; i++)
@@ -216,9 +294,9 @@ int main()
         srand(time(0));
         qnt = (rand() % (upperQNT - lowerQNT + 1)) + lowerQNT;
         //adicionado para evitar numeros iguais devido ao rand correr no mesmo segundo
+        srand(time(0));
         do
         {
-            srand(time(0));
             pid = (rand() % (upperPID - lowerPID + 1)) + lowerPID;
         } while (findPID(PID, qntsimulacao, pid) == 1);
 
@@ -227,11 +305,16 @@ int main()
         resp = alocate_mem(RAM, pid, qnt);
         if (resp > 0)
         {
-            printf("Inicialização com sucesso %d elementos ao PID %d percorridos %d elementos!\n", qnt, pid, resp);
+            RAMOcupada += qnt;
+            printf("%sInicialização com sucesso %d elementos ao PID %d percorridos %d elementos!%s\n", Verde, qnt, pid, resp, Normal);
+            percent = 100 * ((float)RAMOcupada / 128);
+            printf("Ocupação RAM = %.2f%\n", percent);
         }
         else if (resp == -1)
         {
-            printf("Falha ao adicionar %d elementos ao PID %d percorridos sem memoria disponivel!\n", qnt, pid);
+            printf("%sFalha ao adicionar %d elementos ao PID %d percorridos sem memoria disponivel!%s\n", Vermelho, qnt, pid, Normal);
+            percent = 100 * ((float)RAMOcupada / 128);
+            printf("Ocupação RAM = %.2f%\n", percent);
         }
         //random dealocation
         srand(time(0));
@@ -239,16 +322,21 @@ int main()
         {
             //dealocate random existing pid
             int elemento;
+            srand(time(0));
             do
             {
-                srand(time(0));
-                elemento = (rand() % (qntsimulacao + 1));
+                elemento = (rand() % (qntsimulacao));
                 pid = PID[elemento];
-            } while (PID[elemento] == -1);
-            RAM = deallocate_mem(RAM, pid, &status);
+
+            } while (pid == -1 && pid != 0);
+            size = 0;
+            RAM = deallocate_mem(RAM, pid, &status, &size);
             if (status == 1)
             {
-                printf("Dealocação com sucesso do PID %d !\n", pid);
+                RAMOcupada -= size;
+                printf("%sDealocação com sucesso de %d elementos do PID %d !%s\n", Amarelo, size, pid, Normal);
+                percent = 100 * ((float)RAMOcupada / 128);
+                printf("Ocupação RAM = %.2f%\n", percent);
                 PID[elemento] = -1;
             }
         }
