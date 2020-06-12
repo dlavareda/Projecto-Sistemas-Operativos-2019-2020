@@ -177,10 +177,14 @@ Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
     return NULL;
 }
 
-int alocate_mem(Memoria *RAM, int process_id, int num_units)
+int alocate_mem(Memoria *RAM, int process_id, int num_units, int algoritmo) //1 = first fit, 2 = Worst fit, 3 = Best fit
 {
     int count = 0;
-    RAM = firstFit(RAM, process_id, num_units, &count);
+    if (algoritmo == 1)
+    {
+        RAM = firstFit(RAM, process_id, num_units, &count);
+    }
+
     if (RAM == NULL)
     {
         return -1;
@@ -279,7 +283,12 @@ int main()
     }
     printf("Qual a quantidade de pedidos de memoria deseja simular?\n");
     scanf("%d", &qntsimulacao);
-    printf("Inicio da simulação de %d pedidos de memoria usando o first-fit\n", qntsimulacao);
+    int algoritmo = 0;
+    do
+    {
+        printf("Qual o algorimo de gestão de memoria?\n1 - First Fit\n2 - Worst Fit\n3 - Best Fit\n");
+        scanf("%d", &algoritmo);
+    } while (algoritmo < 1 || algoritmo > 3);
     int lowerQNT = 3, upperQNT = 10, qnt = 0, resp = 0, pid = 0, lowerPID = 1, upperPID = qntsimulacao;
     int *PID = malloc(qntsimulacao * sizeof(int));
     int pidcount = 0;
@@ -302,7 +311,21 @@ int main()
 
         pidcount++;
         PID[pidcount - 1] = pid;
-        resp = alocate_mem(RAM, pid, qnt);
+
+        if (algoritmo == 1)
+        {
+            printf("Inicio da simulação de %d pedidos de memoria usando o first-fit\n", qntsimulacao);
+            resp = alocate_mem(RAM, pid, qnt, algoritmo);
+        }
+        else if (algoritmo == 2)
+        {
+            return;
+        }
+        else if (algoritmo == 3)
+        {
+            return;
+        }
+
         if (resp > 0)
         {
             RAMOcupada += qnt;
