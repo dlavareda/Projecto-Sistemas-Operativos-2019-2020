@@ -12,6 +12,7 @@ typedef struct MEMORIA
     struct MEMORIA *nseg;
 } Memoria;
 
+
 Memoria *makenode()
 {
     Memoria *nv;
