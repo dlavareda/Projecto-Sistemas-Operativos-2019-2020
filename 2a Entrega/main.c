@@ -71,75 +71,6 @@ Memoria *initialize_mem(Memoria *RAM, int *sinal)
         return RAM;
     }
 }
-/*Memoria *firstFit(Memoria *RAM, int *count, int num_units)
-{
-    int size_available = 0;
-    while (RAM->nseg != NULL)
-    {
-        if (RAM->PID != NULL)
-        {
-            RAM = RAM->nseg;
-        }
-        else
-        {
-            while (RAM->nseg != NULL)
-            {
-                if (RAM->PID == NULL)
-                {
-                    size_available++;
-                    RAM = RAM->nseg;
-                    (*count)++;
-                    if (size_available == num_units)
-                    {
-                        return RAM;
-                    }
-                    else
-                    {
-                        size_available = 0;
-                        continue;
-                    }
-                }
-            }
-        }
-        (*count)++;
-    }
-    return RAM;
-}*/
-/*int alocate_mem(Memoria *RAM, int process_id, int num_units)
-{
-    int count = 0;
-    int alocado = 0;
-    Memoria *aux = firstFit(RAM, &count, num_units);
-    if (aux == NULL)
-    {
-        return -1;
-    }
-
-    for (int i = 0; i < num_units; i++)
-    {
-        if (aux == NULL)
-        {
-            return -1;
-        }
-        else if (aux->PID != NULL && aux->PID != process_id)
-        {
-            return -1;
-        }
-        aux->PID = process_id;
-        aux = aux->nseg;
-        count++;
-        alocado++;
-    }
-    if (alocado == num_units)
-    {
-        return count;
-    }
-    else
-    {
-        return -1;
-    }
-}*/
-
 Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
 {
     Memoria *start = RAM;
@@ -178,7 +109,7 @@ Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
 }
 
 //worstFit
-Memoria worstFit(Memoria *RAM, int alocsize)
+Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
     int maior = 0;
     int count = 0;
@@ -204,16 +135,18 @@ Memoria worstFit(Memoria *RAM, int alocsize)
                 aux = NULL;
             }
         }
+        (*count1)++;
         RAM = RAM->nseg;
     }
     (alocsize) = maior;
 
-    return *espacoMaior;
+    return espacoMaior;
 }
 
 //bestFit
-Memoria bestFit(Memoria *RAM, int alocsize){
-    
+Memoria bestFit(Memoria *RAM, int alocsize)
+{
+
     int anterior = 0;
     int count = 0;
     int menor = 0;
@@ -233,8 +166,9 @@ Memoria bestFit(Memoria *RAM, int alocsize){
         else
         {
             if (count >= alocsize)
-            { 
-                if(count < anterior){
+            {
+                if (count < anterior)
+                {
                     menor = count;
                     espacoMenor = aux;
                     aux = NULL;
@@ -254,6 +188,8 @@ int alocate_mem(Memoria *RAM, int process_id, int num_units, int algoritmo) //1 
     if (algoritmo == 1)
     {
         RAM = firstFit(RAM, process_id, num_units, &count);
+    }else if(algoritmo == 2){
+        RAM = worstFit(RAM, process_id, num_units, &count);
     }
 
     if (RAM == NULL)
@@ -397,16 +333,8 @@ int main()
 
         pidcount++;
         PID[pidcount - 1] = pid;
-
-        if (algoritmo == 1)
-        {
-            resp = alocate_mem(RAM, pid, qnt, algoritmo);
-        }
-        else if (algoritmo == 2)
-        {
-            return;
-        }
-        else if (algoritmo == 3)
+        resp = alocate_mem(RAM, pid, qnt, algoritmo);
+        if (algoritmo == 3)
         {
             return;
         }
