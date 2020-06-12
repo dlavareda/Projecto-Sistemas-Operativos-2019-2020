@@ -67,7 +67,7 @@ Memoria *initialize_mem(Memoria *RAM, int *sinal)
         return RAM;
     }
 }
-Memoria *firstFree(Memoria *RAM, int *count)
+Memoria *firstFit(Memoria *RAM, int *count)
 {
     while (RAM->nseg != NULL)
     {
@@ -87,7 +87,7 @@ int alocate_mem(Memoria *RAM, int process_id, int num_units)
 {
     int count = 0;
     int alocado = 0;
-    RAM = firstFree(RAM, &count);
+    RAM = firstFit(RAM, &count);
     if (RAM == NULL)
     {
         return -1;
