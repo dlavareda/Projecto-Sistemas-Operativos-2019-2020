@@ -177,6 +177,77 @@ Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
     return NULL;
 }
 
+//worstFit
+Memoria worstFit(Memoria *RAM, int alocsize)
+{
+    int maior = 0;
+    int count = 0;
+    Memoria *aux = RAM;
+    Memoria *espacoMaior = NULL;
+    while (RAM->nseg != NULL)
+    {
+        if (RAM->PID == NULL)
+        {
+            //guarda o primeiro elemento do intervalo
+            if (aux == NULL)
+            {
+                aux = RAM;
+            }
+            count++;
+        }
+        else
+        {
+            if (count > maior)
+            {
+                maior = count;
+                espacoMaior = aux;
+                aux = NULL;
+            }
+        }
+        RAM = RAM->nseg;
+    }
+    (alocsize) = maior;
+
+    return *espacoMaior;
+}
+
+//bestFit
+Memoria bestFit(Memoria *RAM, int alocsize){
+    
+    int anterior = 0;
+    int count = 0;
+    int menor = 0;
+    Memoria *aux = RAM;
+    Memoria *espacoMenor = NULL;
+    while (RAM->nseg != NULL)
+    {
+        if (RAM->PID == NULL)
+        {
+            //guarda o primeiro elemento do intervalo
+            if (aux == NULL)
+            {
+                aux = RAM;
+            }
+            count++;
+        }
+        else
+        {
+            if (count >= alocsize)
+            { 
+                if(count < anterior){
+                    menor = count;
+                    espacoMenor = aux;
+                    aux = NULL;
+                }
+            }
+        }
+        RAM = RAM->nseg;
+        anterior = count;
+    }
+    (alocsize) = menor;
+    return *espacoMenor;
+}
+
 int alocate_mem(Memoria *RAM, int process_id, int num_units, int algoritmo) //1 = first fit, 2 = Worst fit, 3 = Best fit
 {
     int count = 0;
