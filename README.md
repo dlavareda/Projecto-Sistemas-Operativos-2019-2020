@@ -19,7 +19,7 @@ Edit: SFJ algoritm is now implemented on the scheduler simulator.
 2nd part of the work (memory management) is available in the "2a entrega" folder. We have implemented the first-fit and worst-fit algoritm.
 
 ## Usage
-In both milestones the programs are compiled with the name "main" and the various files for its execution are included0
+In both milestones folder "1a entrega" and "2a entrega" the programs are compiled with the name "main" and the various files for its execution are included0
 ```bash
 ./main
 ```
