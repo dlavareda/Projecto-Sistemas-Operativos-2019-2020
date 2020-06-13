@@ -8,6 +8,7 @@ Teachers: Paul Crocker and Valderi Leithardt
 
 ## 1st Milestone
 "Scheduler Simulator"
+
 An operational version of the application is available in the "1a entrega" folder for preview for the teachers.
 
 As indicated in the report:
@@ -16,9 +17,11 @@ Currently the project executes the functions both through the commands read from
 
 ## 2nd Milestone
 "Memory Management Simulator"
+
 SFJ algoritm is now implemented on the scheduler simulator.
 
 "Scheduler Simulator"
+
 2nd part of the work (memory management) is available in the "2a entrega" folder. We have implemented the first-fit and worst-fit algoritm.
 
 ## Usage
