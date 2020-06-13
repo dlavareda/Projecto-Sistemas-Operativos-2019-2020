@@ -14,10 +14,12 @@ As indicated in the report:
 Currently the project executes the functions both through the commands read from control.txt and through the debugging console. Performs the correct reading of the various files indicated in the statement and sends them to corresponding data structures. The programs are loaded into memory sequentially, and instructions for a new program are loaded immediately after the last address used. So far the only scheduling algorithm implemented is FCFS.
 
 ## 2nd Milestone
-In progress
+Edit: SFJ algoritm is now implemented on the scheduler simulator.
+
+2nd part of the work (memory management) is available in the "2a entrega" folder. We have implemented the first-fit and worst-fit algoritm.
 
 ## Usage
-Program is compiled with the name "main" and the various files for its execution are included0
+In both milestones the programs are compiled with the name "main" and the various files for its execution are included0
 ```bash
 ./main
 ```
