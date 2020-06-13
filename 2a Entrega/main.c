@@ -43,6 +43,18 @@ Memoria *insertlast(Memoria *T, Memoria *nv)
     return T;
 }
 
+int findPIDRAM(Memoria *RAM, int PID)
+{
+    while (RAM->nseg != NULL)
+    {
+        if (RAM->PID == PID)
+        {
+            return 1;
+        }
+        RAM = RAM->nseg;
+    }
+    return -1;
+}
 //Contagem de elementos
 int totalElementos(Memoria *L)
 {
@@ -188,7 +200,9 @@ int alocate_mem(Memoria *RAM, int process_id, int num_units, int algoritmo) //1 
     if (algoritmo == 1)
     {
         RAM = firstFit(RAM, process_id, num_units, &count);
-    }else if(algoritmo == 2){
+    }
+    else if (algoritmo == 2)
+    {
         RAM = worstFit(RAM, process_id, num_units, &count);
     }
 
@@ -228,12 +242,27 @@ Memoria *deallocate_mem(Memoria *RAM, int process_id, int *status, int *size)
 
 int fragment_count(Memoria *RAM)
 {
+    Memoria *aux = RAM;
     int count = 0;
+    int flag = 0;
     while (RAM->nseg != NULL)
     {
         if (RAM->PID == NULL)
         {
-            count++;
+            flag = 0;
+            Memoria *aux = RAM;
+            while (aux->nseg != NULL)
+            {
+                if (aux->PID != NULL)
+                {
+                    flag = 1;
+                }
+                aux = aux->nseg;
+            }
+            if (flag == 1)
+            {
+                count++;
+            }
         }
         RAM = RAM->nseg;
     }
@@ -243,7 +272,7 @@ int fragment_count(Memoria *RAM)
 //Função para esperar x milisegundos, sleep do c apenas permite x segundos
 //foi necessário adicionar o sleep devido ao rand dentro do loop dar numeros iguais devido ao time ser igual
 //https://qnaplus.com/c-program-to-sleep-in-milliseconds/
-int msleep(long tms)
+/*int msleep(long tms)
 {
     struct timespec ts;
     int ret;
@@ -263,7 +292,7 @@ int msleep(long tms)
     } while (ret && errno == EINTR);
 
     return ret;
-}
+}*/
 int findPID(int PID[], int qntsimulacao, int valor)
 {
     for (int i = 0; i < qntsimulacao; i++)
@@ -290,8 +319,13 @@ void showMemory(Memoria *RAM)
         RAM = RAM->nseg;
     }
 }
+
 int main()
 {
+    srand((unsigned)time(NULL));
+
+    int totalelementospercorridos = 0;
+    int totalfalhas = 0;
     float percent = 0;
     int RAMOcupada = 0;
     int qntsimulacao = 0;
@@ -321,11 +355,11 @@ int main()
 
     for (int i = 0; i < qntsimulacao; i++)
     {
-        msleep(800);
-        srand(time(0));
+        //msleep(800);
+        //srand(time(0));
         qnt = (rand() % (upperQNT - lowerQNT + 1)) + lowerQNT;
         //adicionado para evitar numeros iguais devido ao rand correr no mesmo segundo
-        srand(time(0));
+        // srand((unsigned)time(NULL));
         do
         {
             pid = (rand() % (upperPID - lowerPID + 1)) + lowerPID;
@@ -342,7 +376,8 @@ int main()
         if (resp > 0)
         {
             RAMOcupada += qnt;
-            printf("%sInicialização com sucesso %d elementos ao PID %d percorridos %d elementos!%s\n", Verde, qnt, pid, resp, Normal);
+            totalelementospercorridos += resp;
+            printf("%sInicialização com sucesso %d elementos ao PID %d percorridos %d elementos para a alocação!%s\n", Verde, qnt, pid, resp, Normal);
             percent = 100 * ((float)RAMOcupada / 128);
             printf("Ocupação RAM = %.2f%\n", percent);
             showMemory(RAM);
@@ -351,23 +386,28 @@ int main()
         else if (resp == -1)
         {
             printf("%sFalha ao adicionar %d elementos ao PID %d percorridos sem memoria disponivel!%s\n", Vermelho, qnt, pid, Normal);
+            totalfalhas++;
             percent = 100 * ((float)RAMOcupada / 128);
             printf("Ocupação RAM = %.2f%\n", percent);
         }
         //random dealocation
-        srand(time(0));
-        if ((rand() % (1 - 0 + 1)) == 1)
+        int prob = (rand() % 10);
+        //60% de prob do processo terminar execussao
+        if (prob >= 4)
         {
             //dealocate random existing pid
             int elemento;
-            srand(time(0));
+            //   srand((unsigned)time(NULL));
             do
             {
                 elemento = (rand() % (qntsimulacao));
                 pid = PID[elemento];
-            } while (pid == -1 && pid != 0);
+
+            } while (pid == -1 || pid == 0 || (findPIDRAM(RAM, pid)) == -1);
             size = 0;
+            status = 0;
             RAM = deallocate_mem(RAM, pid, &status, &size);
+
             if (status == 1)
             {
                 RAMOcupada -= size;
@@ -380,5 +420,7 @@ int main()
             }
         }
     }
-    printf("Existem %d furos", fragment_count(RAM));
+    printf("Numero de fragmentos externos: %d\n", fragment_count(RAM));
+    printf("Foram percorridos em média %d nodes para cada atribuição de memoria\n", totalelementospercorridos / qntsimulacao);
+    printf("Falhou a atribuição de memoria %.2f (%) das vezes\n", 100 * ((float)totalfalhas / (float)qntsimulacao));
 }
