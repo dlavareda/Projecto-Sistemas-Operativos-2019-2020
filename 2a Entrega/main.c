@@ -172,57 +172,7 @@ Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
     return NULL;
 }*/
 
-//worstFit
-/*Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
-{
-    Memoria *aux = NULL;
-    Memoria *aux2 = RAM;
-    int count = 0, maior = 0;
-    Memoria *espacomaior = RAM;
 
-    while (RAM->nseg != NULL)
-    {
-        if (RAM->PID == NULL)
-        {
-            if (aux == NULL)
-            {
-                count = 0;
-                aux = RAM;
-                count++;
-            }else{
-                count++;
-            }
-        }
-        else
-        {
-            if (count == 127)
-            {
-                espacomaior = aux2;
-                maior = count;
-            }
-            else if (count > maior)
-            {
-                maior = count;
-                espacomaior = aux;
-            }
-        }
-        (*count1)++;
-        RAM = RAM->nseg;
-    }
-
-    if (espacomaior != NULL)
-    {
-        for (int i = 0; i < alocsize; i++)
-        {
-            espacomaior->PID = process_id;
-            espacomaior = espacomaior->nseg;
-        }
-        return aux2;
-    }
-
-    return NULL;
-}
-*/
 Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
     Memoria *cabeca = RAM;
@@ -395,26 +345,6 @@ int fragment_count(Memoria *RAM)
     return count;
 }
 
-//Função para esperar x milisegundos, sleep do c apenas permite x segundos
-//foi necessário adicionar o sleep devido ao rand dentro do loop dar numeros iguais devido ao time ser igual
-//https://qnaplus.com/c-program-to-sleep-in-milliseconds/
-/*int msleep(long tms)
-{
-    struct timespec ts;
-    int ret;
-    if (tms < 0)
-    {
-        errno = EINVAL;
-        return -1;
-    }
-    ts.tv_sec = tms / 1000;
-    ts.tv_nsec = (tms % 1000) * 1000000;
-    do
-    {
-        ret = nanosleep(&ts, &ts);
-    } while (ret && errno == EINTR);
-    return ret;
-}*/
 int findPID(int PID[], int qntsimulacao, int valor)
 {
     for (int i = 0; i < qntsimulacao; i++)
