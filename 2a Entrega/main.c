@@ -121,7 +121,7 @@ Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
 }
 
 //worstFit
-Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
+/*Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
     int maior = 0;
     int count = 0;
@@ -130,11 +130,12 @@ Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
     Memoria *espacoMaior = NULL;
     while (RAM->nseg != NULL)
     {
-        if (RAM->PID == NULL)
+        if (RAM->PID == 0)
         {
             //guarda o primeiro elemento do intervalo
             if (aux == NULL)
             {
+                count = 0;
                 aux = RAM;
             }
             count++;
@@ -148,6 +149,12 @@ Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
                 aux = NULL;
             }
         }
+        if (count == 127)
+        {
+            maior = count;
+            espacoMaior = aux;
+            aux = NULL;
+        }
         (*count1)++;
         RAM = RAM->nseg;
     }
@@ -156,15 +163,110 @@ Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
     {
         for (int i = 0; i < alocsize; i++)
         {
-        espacoMaior->PID = process_id;
-        espacoMaior= espacoMaior->nseg;
+            espacoMaior->PID = process_id;
+            espacoMaior = espacoMaior->nseg;
         }
         return aux2;
     }
-    
+
+    return NULL;
+}*/
+
+//worstFit
+/*Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
+{
+    Memoria *aux = NULL;
+    Memoria *aux2 = RAM;
+    int count = 0, maior = 0;
+    Memoria *espacomaior = RAM;
+
+    while (RAM->nseg != NULL)
+    {
+        if (RAM->PID == NULL)
+        {
+            if (aux == NULL)
+            {
+                count = 0;
+                aux = RAM;
+                count++;
+            }else{
+                count++;
+            }
+        }
+        else
+        {
+            if (count == 127)
+            {
+                espacomaior = aux2;
+                maior = count;
+            }
+            else if (count > maior)
+            {
+                maior = count;
+                espacomaior = aux;
+            }
+        }
+        (*count1)++;
+        RAM = RAM->nseg;
+    }
+
+    if (espacomaior != NULL)
+    {
+        for (int i = 0; i < alocsize; i++)
+        {
+            espacomaior->PID = process_id;
+            espacomaior = espacomaior->nseg;
+        }
+        return aux2;
+    }
+
     return NULL;
 }
-
+*/
+Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
+{
+    Memoria *cabeca = RAM;
+    Memoria *maiorespaco = NULL;
+    Memoria *aux2 = NULL;
+    int count = 0;
+    int maior = 0;
+    while (RAM->nseg != NULL)
+    {
+        if (RAM->PID == 0)
+        {
+            if (aux2 == NULL)
+            {
+                aux2 = RAM;
+            }
+            count++;
+        }
+        else if (count > maior)
+        {
+            maiorespaco = aux2;
+            maior = count;
+            count = 0;
+            aux2 = NULL;
+        }
+        (*count1)++;
+        RAM = RAM->nseg;
+    }
+    if (count > maior)
+    {
+        maiorespaco = aux2;
+        maior = count;
+        count = 0;
+    }
+    if (maiorespaco != NULL && maior >= alocsize)
+    {
+        for (int i = 0; i < alocsize; i++)
+        {
+            maiorespaco->PID = process_id;
+            maiorespaco = maiorespaco->nseg;
+        }
+        return cabeca;
+    }
+    return NULL;
+}
 //bestFit
 Memoria *bestFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
@@ -197,6 +299,7 @@ Memoria *bestFit(Memoria *RAM, int process_id, int alocsize, int *count1)
                 }
             }
         }
+        (*count1)++;
         RAM = RAM->nseg;
         anterior = count;
     }
@@ -205,8 +308,8 @@ Memoria *bestFit(Memoria *RAM, int process_id, int alocsize, int *count1)
     {
         for (int i = 0; i < alocsize; i++)
         {
-        espacoMenor->PID = process_id;
-        espacoMenor= espacoMenor->nseg;
+            espacoMenor->PID = process_id;
+            espacoMenor = espacoMenor->nseg;
         }
         return aux2;
     }
@@ -386,6 +489,7 @@ int main()
 
         pidcount++;
         PID[pidcount - 1] = pid;
+
         resp = alocate_mem(RAM, pid, qnt, algoritmo);
 
         if (resp > 0)
@@ -408,7 +512,7 @@ int main()
         //random dealocation
         int prob = (rand() % 10);
         //60% de prob do processo terminar execussao
-        if (prob >= 4)
+        if (prob >= 7)
         {
             //dealocate random existing pid
             int elemento;
