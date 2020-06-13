@@ -464,7 +464,7 @@ int main()
     int algoritmo = 0;
     do
     {
-        printf("Qual o algorimo de gestão de memoria?\n1 - First Fit\n2 - Worst Fit\n3 - Best Fit\n");
+        printf("Qual o algorimo de gestão de memoria?\n1 - First Fit\n2 - Worst Fit\n3 - Best Fit(Por Implementar)\n");
         scanf("%d", &algoritmo);
     } while (algoritmo < 1 || algoritmo > 3);
     int lowerQNT = 3, upperQNT = 10, qnt = 0, resp = 0, pid = 0, lowerPID = 1, upperPID = qntsimulacao;
@@ -512,7 +512,7 @@ int main()
         //random dealocation
         int prob = (rand() % 10);
         //60% de prob do processo terminar execussao
-        if (prob >= 7)
+        if (prob >= 4)
         {
             //dealocate random existing pid
             int elemento;
