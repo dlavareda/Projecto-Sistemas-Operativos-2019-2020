@@ -125,7 +125,8 @@ Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
     int maior = 0;
     int count = 0;
-    Memoria *aux = RAM;
+    Memoria *aux = NULL;
+    Memoria *aux2 = RAM;
     Memoria *espacoMaior = NULL;
     while (RAM->nseg != NULL)
     {
@@ -150,19 +151,28 @@ Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
         (*count1)++;
         RAM = RAM->nseg;
     }
-    (alocsize) = maior;
 
-    return espacoMaior;
+    if (maior >= alocsize)
+    {
+        for (int i = 0; i < alocsize; i++)
+        {
+        espacoMaior->PID = process_id;
+        espacoMaior= espacoMaior->nseg;
+        }
+        return aux2;
+    }
+    
+    return NULL;
 }
 
 //bestFit
-Memoria bestFit(Memoria *RAM, int alocsize)
+Memoria *bestFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
-
     int anterior = 0;
     int count = 0;
     int menor = 0;
-    Memoria *aux = RAM;
+    Memoria *aux = NULL;
+    Memoria *aux2 = RAM;
     Memoria *espacoMenor = NULL;
     while (RAM->nseg != NULL)
     {
@@ -190,8 +200,17 @@ Memoria bestFit(Memoria *RAM, int alocsize)
         RAM = RAM->nseg;
         anterior = count;
     }
-    (alocsize) = menor;
-    return *espacoMenor;
+
+    if (menor >= alocsize)
+    {
+        for (int i = 0; i < alocsize; i++)
+        {
+        espacoMenor->PID = process_id;
+        espacoMenor= espacoMenor->nseg;
+        }
+        return aux2;
+    }
+    return NULL;
 }
 
 int alocate_mem(Memoria *RAM, int process_id, int num_units, int algoritmo) //1 = first fit, 2 = Worst fit, 3 = Best fit
@@ -204,6 +223,10 @@ int alocate_mem(Memoria *RAM, int process_id, int num_units, int algoritmo) //1 
     else if (algoritmo == 2)
     {
         RAM = worstFit(RAM, process_id, num_units, &count);
+    }
+    else if (algoritmo == 3)
+    {
+        RAM = bestFit(RAM, process_id, num_units, &count);
     }
 
     if (RAM == NULL)
@@ -276,21 +299,17 @@ int fragment_count(Memoria *RAM)
 {
     struct timespec ts;
     int ret;
-
     if (tms < 0)
     {
         errno = EINVAL;
         return -1;
     }
-
     ts.tv_sec = tms / 1000;
     ts.tv_nsec = (tms % 1000) * 1000000;
-
     do
     {
         ret = nanosleep(&ts, &ts);
     } while (ret && errno == EINTR);
-
     return ret;
 }*/
 int findPID(int PID[], int qntsimulacao, int valor)
@@ -368,10 +387,6 @@ int main()
         pidcount++;
         PID[pidcount - 1] = pid;
         resp = alocate_mem(RAM, pid, qnt, algoritmo);
-        if (algoritmo == 3)
-        {
-            return;
-        }
 
         if (resp > 0)
         {
