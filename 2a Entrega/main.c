@@ -172,7 +172,6 @@ Memoria *firstFit(Memoria *RAM, int process_id, int num_units, int *count)
     return NULL;
 }*/
 
-
 Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
     Memoria *cabeca = RAM;
@@ -220,49 +219,64 @@ Memoria *worstFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 //bestFit
 Memoria *bestFit(Memoria *RAM, int process_id, int alocsize, int *count1)
 {
-    int anterior = 0;
+    typedef struct Espaco
+    {
+        Memoria *endereco;
+        int tamanho; //dado
+        int pid;
+    } Espaco;
+
+    Espaco *livre = malloc(0);
+    int livresize = 0;
     int count = 0;
-    int menor = 0;
     Memoria *aux = NULL;
     Memoria *aux2 = RAM;
-    Memoria *espacoMenor = NULL;
     while (RAM->nseg != NULL)
     {
         if (RAM->PID == NULL)
         {
-            //guarda o primeiro elemento do intervalo
             if (aux == NULL)
             {
+                livresize++;
+                livre = realloc(livre, livresize * sizeof(Espaco));
                 aux = RAM;
+            }
+            else
+            {
+                livre[livresize - 1].tamanho++;
             }
             count++;
         }
         else
         {
-            if (count >= alocsize)
-            {
-                if (count < anterior)
-                {
-                    menor = count;
-                    espacoMenor = aux;
-                    aux = NULL;
-                }
-            }
+            count = 0;
+            livre[livresize - 1].endereco = aux;
+            aux = NULL;
         }
-        (*count1)++;
         RAM = RAM->nseg;
-        anterior = count;
+    }
+    if (count == 127)
+    {
+        livre[livresize - 1].endereco = aux2;
     }
 
-    if (menor >= alocsize)
+    for (int j = alocsize; j < 127; j++)
     {
-        for (int i = 0; i < alocsize; i++)
+        for (int i = 0; i < livresize; i++)
         {
-            espacoMenor->PID = process_id;
-            espacoMenor = espacoMenor->nseg;
+            if (livre[i].tamanho == j)
+            {
+
+                for (int k = 0; k < alocsize; k++)
+                {
+                    livre[i].endereco->PID = process_id;
+                    livre[i].endereco = livre[i].endereco->nseg;
+                }
+                return aux2;
+            }
         }
-        return aux2;
     }
+
     return NULL;
 }
 
@@ -358,6 +372,7 @@ int findPID(int PID[], int qntsimulacao, int valor)
 }
 void showMemory(Memoria *RAM)
 {
+    printf("Representação gráfica da RAM\n");
     while (RAM->nseg != NULL)
     {
         if (RAM->PID != NULL)
@@ -394,7 +409,7 @@ int main()
     int algoritmo = 0;
     do
     {
-        printf("Qual o algorimo de gestão de memoria?\n1 - First Fit\n2 - Worst Fit\n3 - Best Fit(Por Implementar)\n");
+        printf("Qual o algorimo de gestão de memoria?\n1 - First Fit\n2 - Worst Fit\n3 - Best Fit(Implementação não concluída)\n");
         scanf("%d", &algoritmo);
     } while (algoritmo < 1 || algoritmo > 3);
     int lowerQNT = 3, upperQNT = 10, qnt = 0, resp = 0, pid = 0, lowerPID = 1, upperPID = qntsimulacao;
