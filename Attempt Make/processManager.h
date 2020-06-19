@@ -93,7 +93,8 @@ void mostrarRAM(Memory *, int );
 //cria o processo do escalonador
 void inicializarPCB(PCB *, int *);
 
-int adicionarProcessoPCB(PCB *, int *, char *, int , int , int );
+
+int adicionarProcessoPCB(PCB *ProcessCB, int *PCB_size, char *nome[15], int primeiroElementoMemoria, int tempo_chegada, int tempo_burst);
 
 //Função para listar processos prontos no gestor
 void mostrarProcessosReady(Gestor *);
