@@ -1,2 +1,2 @@
 progenitor.prg 0
-filho1.prg 10
+filho2.prg 10

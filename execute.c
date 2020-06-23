@@ -44,10 +44,10 @@ void executarPrograma(Memory *RAM, int *RAM_size, int PID, PCB *ProcessCB, int *
         end = *RAM_size;
     }
     //start += ProcessCB[indicePCB].PC;
-    if (PID == 3)
+    /*if (PID == 3)
     {
         printf("agora");
-    }
+    }*/
     for (int i = start; i <= end; i++)
     {
 

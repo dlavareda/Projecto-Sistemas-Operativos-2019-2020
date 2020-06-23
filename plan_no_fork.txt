@@ -1,0 +1,3 @@
+programa1.prg 0
+programa2.prg 5
+programa3.prg 10
